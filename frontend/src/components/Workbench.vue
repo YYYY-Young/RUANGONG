@@ -35,35 +35,31 @@
 			<div class="body">
 				<div>
 					<h2>我的文档</h2>
-					<p>
+						<p>
 						最近浏览
-					</p>
-					
-					<div>
-						<ul>
-							<li id="link1">
-								<a href="www.baidu.com"><span>文档1</span></a>
-							</li>
-							<li id="link2">
-								<a href="www.baidu.com"><span>文档2</span></a>
-							</li>
-							<li id="link3">
-								<a href="www.baidu.com"><span>文档3</span></a>
-							</li>
-						</ul>
-
-                        <h2>文档列表</h2>
-						
-					</div>
-
-                    
-                    
-					
+						</p> 
+						<div>
+							<ul>
+								<li id="link1" style="">
+									<img src="../assets/images/design.png"  style="width:95%;height:80%" @click="createarticle()">
+									<span>创建新文档</span>
+								</li>
+								<li id="link2">
+									<img src="../assets/images/design.png" style="width:95%;height:80%">
+									<span>文档1</span>
+								</li>
+								<li id="link3">
+									<img src="../assets/images/design.png" style="width:95%;height:80%">
+									<span>文档2</span>
+								</li>
+								<li id="link4">
+									<img src="../assets/images/more-design.png" style="width:95%;height:80%" @click="morearticle()">
+									<span>更多</span>
+								</li>
+							</ul>
+							
+						</div>                      					
 				</div>
-
-                
-                
-
 			</div>
 		</div>
 	</div>
@@ -74,13 +70,40 @@ export default {
   name: 'Workbench',
   props: {
     msg: String
+  },
+  methods: {
+		createarticle(){
+			let articleUrl = this.$router.resolve({
+				name: 'ArticleEditor', 
+
+			})
+			window.open(articleUrl.href,'_blank')
+		},
+		morearticle(){
+			let articleUrl = this.$router.resolve({
+				name: 'Articles', 
+
+			})
+			window.open(articleUrl.href,'_blank')
+		}
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
+<style >
+.card{
+width: auto;
+height: 10px;
+}
+.image{
+width: 100%;
+display: block;
+}
+.la{
+width: auto;
+height: auto;
+}
 @import "../assets/css/Workbench.css"
 
 </style>
