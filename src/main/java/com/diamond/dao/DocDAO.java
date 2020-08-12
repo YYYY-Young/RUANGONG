@@ -16,4 +16,5 @@ public interface DocDAO extends JpaRepository<Doc,Integer> {
     Doc findById(int id);
     @Transactional
     void deleteById(int id);
+    List<Doc> findAllByDoc_teamAndDoc_recycle(int tid,boolean r);
 }

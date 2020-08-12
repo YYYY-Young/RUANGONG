@@ -32,6 +32,8 @@ public class DocService {
         doc = docDAO.findById(id);
         if(doc!=null){
             int tid=doc.getDoc_team();
+            System.out.println(doc.isDoc_recycle());
+            if (doc.isDoc_recycle())return null;
             if(doc.getDoc_founder()!=uid&&(!doc.isDoc_read()||(doc.isDoc_only_team()&&!userTeamService.isTeammember(uid,tid)))){
                 return null;
             }
@@ -44,6 +46,9 @@ public class DocService {
         userDoc.setDoc_open_time(ctime);
         userDocDAO.save(userDoc);
         return doc;
+    }
+    public List<Doc> findAllByDoc_team(int tid){
+        return docDAO.findAllByDoc_teamAndDoc_recycle(tid,false);
     }
     public int addOrUpdate(Doc doc){
         int docid=doc.getId();
@@ -69,8 +74,13 @@ public class DocService {
         if(doc.getDoc_founder()!=uid&&(!doc.isDoc_delete()||(doc.isDoc_only_team()&&!userTeamService.isTeammember(uid,tid)))){
             return 0;
         }
-        docDAO.deleteById(id);
-        userDocDAO.deleteAllByDocid(id);
+        if(!doc.isDoc_recycle()){
+            doc.setDoc_recycle(true);
+            docDAO.save(doc);
+        }else {
+            docDAO.deleteById(id);
+            userDocDAO.deleteAllByDocid(id);
+        }
         return 1;
     }
     public int share(int fromuid,int touid,int docid,String msg){
@@ -88,6 +98,17 @@ public class DocService {
         userDoc.setDoc_open_des(msg);
         userDocDAO.save(userDoc);
         return 1;
+    }
+    public int restoreDoc(int uid,int docid){
+        Doc doc=docDAO.findById(docid);
+        int fid=doc.getDoc_founder();
+        if(fid!=uid){
+            return 0;
+        }else {
+            doc.setDoc_recycle(false);
+            docDAO.save(doc);
+            return 1;
+        }
     }
 
     public MyPage list(int page, int size) {

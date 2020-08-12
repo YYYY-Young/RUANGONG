@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Classname DocController
@@ -36,7 +37,11 @@ public class DocController {
 
     @GetMapping("/api/admin/content/doc/getone/{id}/{uid}")
     public Result getOneDoc(@PathVariable("id") int id,@PathVariable("uid") int uid) {
-        return ResultFactory.buildSuccessResult(docService.findById(uid,id));
+        if (docService.findById(uid,id)!=null){
+            return ResultFactory.buildSuccessResult(docService.findById(uid,id));
+        }else {
+            return ResultFactory.buildFailResult("没有权限查看");
+        }
     }
 
     @DeleteMapping("/api/admin/content/doc/deleteone/{id}/{uid}")
@@ -61,5 +66,15 @@ public class DocController {
         }
         return ResultFactory.buildFailResult("未知错误");
     }
+    @PostMapping("/api/admin/trash/{uid}/{docid}")
+    public Result restore(@PathVariable int uid,@PathVariable int docid){
+        int b=docService.restoreDoc(uid,docid);
+        if (b==0){
+            return ResultFactory.buildFailResult("无法恢复文件");
+        }else{
+            return ResultFactory.buildSuccessResult("成功恢复文件");
+        }
+    }
+
 
 }

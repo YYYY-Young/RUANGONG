@@ -1,14 +1,17 @@
 package com.diamond.controller;
 
+import com.diamond.entity.Doc;
 import com.diamond.entity.User;
 import com.diamond.entity.UserTeam;
 import com.diamond.result.Result;
 import com.diamond.result.ResultFactory;
+import com.diamond.service.DocService;
 import com.diamond.service.UserTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Classname UserTeamController
@@ -20,6 +23,8 @@ import javax.validation.Valid;
 public class UserTeamController {
     @Autowired
     UserTeamService userTeamService;
+    @Autowired
+    DocService docService;
     @GetMapping("/api/admin/team/findteams/{uid}")
     public Result listUsers(@PathVariable("uid") int uid){
         return ResultFactory.buildSuccessResult(userTeamService.listAllByUid(uid));

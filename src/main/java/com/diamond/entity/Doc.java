@@ -51,4 +51,5 @@ public class Doc {
     private boolean doc_share;
     private int doc_last_edit_uid;
     private Timestamp doc_last_edit_time;
+    private boolean doc_recycle;
 }
