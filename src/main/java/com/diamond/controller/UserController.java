@@ -41,5 +41,9 @@ public class UserController {
         userService.editUser(requestUser);
         return ResultFactory.buildSuccessResult("修改用户信息成功");
     }
+    @GetMapping("/api/admin/getuser/{username}")
+    public Result getuser(@PathVariable("username") String username){
+       return ResultFactory.buildSuccessResult(userService.findByUsername(username));
+    }
 
 }

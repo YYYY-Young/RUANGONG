@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -18,6 +19,8 @@ public interface DocDAO extends JpaRepository<Doc,Integer> {
     Doc findById(int id);
     @Transactional
     void deleteById(int id);
+    @Query(value = "select * from doc where id=?1 and doc_recycle=0 ",nativeQuery=true )
+    Doc findnotdeletedocs(int id);
     @Modifying
     @Query(value = "select * from doc where doc_only_team=1 and doc_team=?1 and doc_recycle=0 ",nativeQuery=true )
     List<Doc> teamdocs(int tid);

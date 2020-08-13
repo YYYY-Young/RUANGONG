@@ -31,7 +31,7 @@ class DemoApplicationTests {
     private UserDocDAO userDocDAO;
     @Test
     public void contextLoads() {
-        System.out.println(userDocDAO.findreadrecords(1));
+        System.out.println( docDAO.findnotdeletedocs(1));
 
 
     }

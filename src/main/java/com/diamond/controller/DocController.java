@@ -20,7 +20,7 @@ import java.util.List;
 public class DocController {
     @Autowired
     DocService docService;
-    @PostMapping("api/admin/content/doc/save")
+    @PostMapping("api/doc/save")
     public Result saveDoc(@RequestBody @Valid Doc doc){
         if(docService.addOrUpdate(doc)==1){
           return ResultFactory.buildSuccessResult("保存成功");
@@ -35,7 +35,7 @@ public class DocController {
         return ResultFactory.buildSuccessResult(docService.list(page - 1, size));
     }
 
-    @GetMapping("/api/admin/content/doc/getone/{id}/{uid}")
+    @GetMapping("/api/doc/getone/{id}/{uid}")
     public Result getOneDoc(@PathVariable("id") int id,@PathVariable("uid") int uid) {
         if (docService.findById(uid,id)!=null){
             return ResultFactory.buildSuccessResult(docService.findById(uid,id));
@@ -43,8 +43,12 @@ public class DocController {
             return ResultFactory.buildFailResult("没有权限查看");
         }
     }
+    @GetMapping("api/doc/docread/{uid}")
+    public Result getdocread(@PathVariable("uid") int uid){
+        return ResultFactory.buildSuccessResult(docService.findbyuidread(uid));
+    }
 
-    @DeleteMapping("/api/admin/content/doc/deleteone/{id}/{uid}")
+    @DeleteMapping("/api/doc/deleteone/{id}/{uid}")
     public Result deleteDoc(@PathVariable("id") int id,@PathVariable("uid") int uid) {
         if(docService.delete(uid,id)==1){
             return ResultFactory.buildSuccessResult("成功将文件放入回收站");

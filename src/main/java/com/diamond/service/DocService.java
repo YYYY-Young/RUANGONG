@@ -12,7 +12,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Classname DocService
@@ -28,6 +31,8 @@ public class DocService {
     UserTeamService userTeamService;
     @Autowired
     UserDocDAO userDocDAO;
+    @Autowired
+    UserDocService userDocService;
     public Doc findById(int uid,int id) {
         Doc doc;
         doc = docDAO.findById(id);
@@ -49,23 +54,24 @@ public class DocService {
         return doc;
     }
     public int addOrUpdate(Doc doc){
-        int docid=doc.getId();
+
         int uid=doc.getDoc_last_edit_uid();
         int tid=doc.getDoc_team();
         if(doc.getDoc_founder()!=uid&&(!doc.isDoc_edit()||(doc.isDoc_only_team()&&!userTeamService.isTeammember(uid,tid)))){
             return 0;
         }
-        docDAO.save(doc);
+        doc =docDAO.save(doc);
+        int docid=doc.getId();
         UserDoc userDoc=new UserDoc();
         userDoc.setUid(uid);
         userDoc.setDocid(docid);
-        userDoc.setDoc_edit(true);
+        userDoc.setDoc_read(true);
         java.sql.Timestamp ctime = new java.sql.Timestamp(new java.util.Date().getTime());
         userDoc.setDoc_open_time(ctime);
         userDocDAO.save(userDoc);
-
         return 1;
     }
+    @Transactional
     public int delete(int uid,int id){
         Doc doc = docDAO.findById(id);
         int tid=doc.getDoc_team();
@@ -101,6 +107,17 @@ public class DocService {
         userDocDAO.save(userDoc);
         return 1;
     }
+    public List<Doc>findbyuidread(int uid){
+        List<Doc> docs=new ArrayList<>();
+        List<UserDoc>userDocs=userDocService.findByRead(uid);
+       for( UserDoc tempuserdoc  : userDocs){
+           Doc doctemp=docDAO.findnotdeletedocs(tempuserdoc.getDocid());
+           if(doctemp!=null)
+           docs.add(doctemp);}
+           Set<Doc> userSet = new HashSet<>(docs);
+           List<Doc> list = new ArrayList<>(userSet);
+           return list;
+       }
 
     public MyPage list(int page, int size) {
         MyPage<Doc> docs;
