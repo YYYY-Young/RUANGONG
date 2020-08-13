@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Workbench from '../components/Workbench.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
+import User from '../components/User.vue'
 Vue.use(VueRouter)
 
   const routes = [
@@ -15,6 +16,11 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/User',
+    name: 'User',
+    component: User
   },
   {
     path: '/Register',
