@@ -27,4 +27,22 @@ public class UserDocService {
     public List<UserDoc> userDocs(int uid){
        return userDocDAO.findAllByUid(uid);
     }
+    public List<UserDoc> findByRead(int uid){
+        return userDocDAO.findreadrecords(uid);
+    }
+    public List<UserDoc> findByEdit(int uid){
+        return userDocDAO.findeditrecords(uid);
+    }
+    public List<UserDoc> findByComment(int uid){
+       return userDocDAO.findcommentrecords(uid);
+    }
+    public List<UserDoc> findByShare(int uid){
+        return userDocDAO.findsharerecords(uid);
+    }
+    public int finddoclikes(int docid){
+        return userDocDAO.findlikes(docid);
+    }
+    public List<UserDoc> finduserlikes(int uid){
+        return userDocDAO.userfindlikes(uid);
+    }
 }

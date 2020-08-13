@@ -37,7 +37,11 @@ public class UserDoc {
 
     private boolean doc_comment;
 
+    private int commentid;
+
     private boolean doc_share;
+
+    private boolean doc_like;
 
     private String doc_open_des;
 

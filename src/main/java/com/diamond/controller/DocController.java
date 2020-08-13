@@ -47,10 +47,13 @@ public class DocController {
     @DeleteMapping("/api/admin/content/doc/deleteone/{id}/{uid}")
     public Result deleteDoc(@PathVariable("id") int id,@PathVariable("uid") int uid) {
         if(docService.delete(uid,id)==1){
-            return ResultFactory.buildSuccessResult("删除成功");
+            return ResultFactory.buildSuccessResult("成功将文件放入回收站");
         }
-        if(docService.delete(uid,id)!=1){
-            return ResultFactory.buildFailResult("没有权限删除文章");
+        if(docService.delete(uid,id)==2){
+            return ResultFactory.buildFailResult("成功永久删除文件");
+        }
+        if(docService.delete(uid,id)==0){
+            return ResultFactory.buildFailResult("没有权限删除文件");
         }
         return ResultFactory.buildFailResult("未知错误");
 
@@ -66,15 +69,11 @@ public class DocController {
         }
         return ResultFactory.buildFailResult("未知错误");
     }
-    @PostMapping("/api/admin/trash/{uid}/{docid}")
-    public Result restore(@PathVariable int uid,@PathVariable int docid){
-        int b=docService.restoreDoc(uid,docid);
-        if (b==0){
-            return ResultFactory.buildFailResult("无法恢复文件");
-        }else{
+    @PostMapping("/api/admin/trash/{docid}")
+    public Result restore(@PathVariable int docid){
+        docService.resume(docid);
             return ResultFactory.buildSuccessResult("成功恢复文件");
         }
     }
 
 
-}

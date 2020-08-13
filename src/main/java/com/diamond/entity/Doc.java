@@ -49,7 +49,8 @@ public class Doc {
     private boolean doc_comment;
     private boolean doc_delete;
     private boolean doc_share;
+    private boolean doc_recycle;
     private int doc_last_edit_uid;
     private Timestamp doc_last_edit_time;
-    private boolean doc_recycle;
+
 }

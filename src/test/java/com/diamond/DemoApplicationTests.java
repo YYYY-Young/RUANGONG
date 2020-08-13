@@ -1,6 +1,7 @@
 package com.diamond;
 
 import com.diamond.dao.DocDAO;
+import com.diamond.dao.UserDocDAO;
 import com.diamond.entity.Doc;
 import com.diamond.entity.Team;
 import com.diamond.entity.User;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.sound.midi.Soundbank;
 import java.util.List;
 
 @SpringBootTest
@@ -25,9 +27,11 @@ class DemoApplicationTests {
     private DocService docService;
     @Autowired
     private DocDAO docDAO;
+    @Autowired
+    private UserDocDAO userDocDAO;
     @Test
     public void contextLoads() {
-        System.out.println( docService.delete(1,2));
+        System.out.println(userDocDAO.findreadrecords(1));
 
 
     }

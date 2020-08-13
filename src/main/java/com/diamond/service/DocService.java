@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,9 +48,6 @@ public class DocService {
         userDocDAO.save(userDoc);
         return doc;
     }
-    public List<Doc> findAllByDoc_team(int tid){
-        return docDAO.findAllByDoc_teamAndDoc_recycle(tid,false);
-    }
     public int addOrUpdate(Doc doc){
         int docid=doc.getId();
         int uid=doc.getDoc_last_edit_uid();
@@ -75,13 +73,17 @@ public class DocService {
             return 0;
         }
         if(!doc.isDoc_recycle()){
-            doc.setDoc_recycle(true);
-            docDAO.save(doc);
+           docDAO.put_in_recycle_bin(id);
+            return 1;
         }else {
             docDAO.deleteById(id);
             userDocDAO.deleteAllByDocid(id);
         }
-        return 1;
+        return 2;
+    }
+
+    public void resume(int id){
+        docDAO.take_out_recycle_bin(id);
     }
     public int share(int fromuid,int touid,int docid,String msg){
         Doc doc = docDAO.findById(docid);
@@ -98,17 +100,6 @@ public class DocService {
         userDoc.setDoc_open_des(msg);
         userDocDAO.save(userDoc);
         return 1;
-    }
-    public int restoreDoc(int uid,int docid){
-        Doc doc=docDAO.findById(docid);
-        int fid=doc.getDoc_founder();
-        if(fid!=uid){
-            return 0;
-        }else {
-            doc.setDoc_recycle(false);
-            docDAO.save(doc);
-            return 1;
-        }
     }
 
     public MyPage list(int page, int size) {
