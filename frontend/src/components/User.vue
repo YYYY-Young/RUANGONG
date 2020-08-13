@@ -143,7 +143,7 @@ export default {
   },
   computed: {
     username: function() {
-      if (this.$store.state.isLogin) {
+      if (this.$store.state.user) {
         return this.$store.state.user.username;
       } else return "未登录";
     },

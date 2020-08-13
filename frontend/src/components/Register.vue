@@ -48,12 +48,12 @@ export default {
     return {
   
       registerForm: {
-        username: 'abcdcd',
-        password: '123456',
-        repetpassword: '123456',
-        email: '2010169473@qq.com',
-        code: '100000',
-        phone: '19988726262',
+        username: '',
+        password: '',
+        repetpassword: '',
+        email: '',
+        code: '',
+        phone: '',
       },
 
       registerFormRules: {
@@ -64,7 +64,7 @@ export default {
         // 验证密码是否合法
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
         ],
         email: [ 
           { required: true, type: 'email',message: '请输入正确的邮箱地址', trigger: 'blur' }
@@ -96,7 +96,7 @@ export default {
         if (!valid) return
        
         var _this = this
-        this.$http.post('/register', {
+        this.$axios.post('/register', {
             username: this.registerForm.username,
             password: this.registerForm.password,
             email: this.registerForm.email,
@@ -104,15 +104,12 @@ export default {
             phone: this.registerForm.phone
           })
           .then(resp => {
-             alert('submit')
             if (resp.data.code === 200) {
-              alert('submit')
               var data = resp.data.result
               _this.$store.commit('login', data)
               this.$message.success('注册成功，请登录')
               this.$router.push('/login')
             } else {
-               alert('submit')
               this.$alert(resp.data.message, '邮箱验证码错误', {
                 confirmButtonText: '确定'
               })

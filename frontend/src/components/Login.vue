@@ -51,7 +51,7 @@ export default {
         // 验证密码是否合法
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          { min: 3, max: 15, message: '长度在 0 到 15 个字符', trigger: 'blur' }
         ]
       }
     }
@@ -76,35 +76,31 @@ export default {
     
         this.$router.push('/home')*/
 
-    login () {
-        this.$refs.loginFormRef.validate(async valid => {
-        if (!valid) return
-        
+     login () {
         var _this = this
-        this.$http.post('/login', {
+        this.$axios
+          .post('/login', {
             username: this.loginForm.username,
             password: this.loginForm.password
           })
           .then(resp => {
-             alert('submit')
             if (resp.data.code === 200) {
-              alert('submit')
               var data = resp.data.result
               _this.$store.commit('login', data)
-              this.$message.success('登录成功')
-              this.$router.push('/home')
+              //console.log(_this.$store.state.user.id)
+              var path = _this.$route.query.redirect
+    
+              _this.$router.replace({path: path === '/' || path === undefined ? '/workbench' : path})
             } else {
-               alert('submit')
-              this.$alert(resp.data.message, '用户名或密码错误', {
+              this.$alert(resp.data.message, '提示', {
                 confirmButtonText: '确定'
               })
             }
-          }
-          )
+          })
           .catch(failResponse => {})
-      })
+      }
+      }
     }
-  }}
       //)
    // }
  // }

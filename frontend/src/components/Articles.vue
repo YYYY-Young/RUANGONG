@@ -12,19 +12,19 @@
                 <div v-for="item in articles" :key="item.id">
                   
                     <div style="float:left;width:85%;height: 150px;">
-                        <router-link class="article-link" :to="{path:'/articledetail'}"><span style="font-size: 20px"><strong>{{item.title}}</strong></span></router-link>
-                          <el-divider content-position="left">{{item.abs}}</el-divider>    
+                        <router-link class="article-link" :to="{path:'/articledetail',query:{id: item.id}}"><span style="font-size: 20px"><strong>{{item.doc_title}}</strong></span></router-link>
+                          <el-divider content-position="left">{{item.doc_abstract}}</el-divider>    
                          <el-divider></el-divider>                 
                     </div>                                                     
                 </div> 
            </el-card>
        </div>      
-       <el-pagination
+       <!-- <el-pagination
            background
            @current-change="handleCurrentChange"
            layout="total, prev, pager, next, jumper"
            :page-size="13"
-           :total="4"></el-pagination>
+           :total="this.total"></el-pagination> -->
        
    </div>
    </div>
@@ -35,28 +35,39 @@ export default {
     name: 'Articles',
   data () {
       return {
+        docid: [],
         articles: [
-            {id:1,title:"one",abs:"jdklfjklqjwklrew"},
-            {id:2,title:"two",abs:"sdfwerwetretwerwet"},
-            {id:3,title:"emm",abs:"dfjkwljekjlkwjkel"},
-            {id:4,title:"qaq",abs:"djfkljwkerklwjeklr"},
+           
+           // {id:1,title:"one",abs:"jdklfjklqjwklrew"},
+           // {id:2,title:"two",abs:"sdfwerwetretwerwet"},
+           // {id:3,title:"emm",abs:"dfjkwljekjlkwjkel"},
+           // {id:4,title:"qaq",abs:"djfkljwkerklwjeklr"},
         ],
         pageSize: 4,
-        total: 4
+        total: 5
       }
     },
     mounted () {
-        //this.loadArticles
-    },
+      this.loadArticles()  
+        },
     methods : {
-       // loadArticles (){
-
-       // },
+        loadArticles (){
+       var _this = this
+       //console.log(this.$store.)
+        this.$axios.get('/doc/docread/'+this.$store.state.user.id).then(resp => {
+          if (resp && resp.data.code === 200) {
+                _this.articles=resp.data.result
+               
+          }
+        })
+      }
+       },
+         
          handleCurrentChange (){
 
          }
     }
-}
+
 </script>
 
 

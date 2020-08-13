@@ -11,10 +11,10 @@
     <el-row>
       <el-card style="background:#D0D0D0;">        
         <input
-        v-model="articleTitle"
+        v-model="article.doc_title"
         style="margin: 10px 0px;font-size: 18px;"
         placeholder="请输入标题" />
-        按下Ctrl+S或者点击工具栏保存按钮保存文章
+        按下Ctrl+S或者点击工具栏保存按钮提交文章修改内容
       </el-card>       
     </el-row>
     <el-row>
@@ -40,7 +40,7 @@
         <el-divider content-position="left">摘要</el-divider>
         <el-input
           type="textarea"
-          v-model="articleAbstract"
+          v-model="article.doc_abstract"
           rows="6"
           maxlength="255"
           show-word-limit></el-input>
@@ -58,9 +58,7 @@
     name: 'Editor',
     data () {
       return {
-        articleAbstract: "default abstract",
         article: {} ,
-        articleTitle: "",//默认标题
         dialogVisible: false, //控制是否显示弹框
       }
     },
@@ -68,8 +66,6 @@
       
       if (this.$route.params.article) { 
         this.article = this.$route.params.article
-        this.articleTitle=this.article.doc_title
-        this.articleAbstract=this.article.doc_abstract
       }
     },
     methods: {
@@ -84,28 +80,29 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            if(this.articleTitle==""){
-              this.articleTitle="default header"
+            if(_this.article.doc_title==""){
+              _this.article.doc_title="default header"
         }     
         //如果没有输入标题将以默认标题提交
            var date=new Date()
 
             this.$axios.post('/doc/save', {
-            doc_title: _this.articleTitle,
+            id:_this.article.id,
+            doc_title:_this.article.doc_title,
             doc_content_html: render,
             doc_content_md: value,
-            doc_abstract: _this.articleAbstract,
-            doc_cover: "",
-            doc_found_date: date,
-            doc_founder: this.$store.state.user.id,
-            doc_team: "0",
-            doc_only_team: false,
-            doc_read: true,
-            doc_edit: true,
-            doc_comment: true,
-            doc_delete: false,
-            doc_share: true,
-            doc_recycle: false,
+            doc_abstract: _this.article.doc_abstract,
+            doc_cover:"",
+            doc_found_date: _this.article.doc_found_date,
+            doc_founder:_this.article.doc_founder,
+            doc_team: _this.article.doc_team,
+            doc_only_team: _this.article.doc_only_team,
+            doc_read: _this.article.doc_read,
+            doc_edit:_this.article.doc_edit,
+            doc_comment: _this.article.doc_comment,
+            doc_delete:_this.article.doc_delete,
+            doc_share:_this.article.doc_share, 
+            doc_recycle:_this.article.doc_recycle,
             doc_last_edit_uid: this.$store.state.user.id,           
             doc_last_edit_time: date
 
@@ -114,7 +111,7 @@
               if (resp && resp.data.code === 200) {
                 this.$message({
                   type: 'info',
-                  message: '已保存成功'
+                  message: '已修改成功'
                 })
               }
             })
