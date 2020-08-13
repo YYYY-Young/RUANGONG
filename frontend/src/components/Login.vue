@@ -2,11 +2,11 @@
   <div class="login_container">
     <div class="login_box">
     
-      <!-- 头像区域 -->
+      <!-- 头像区域
       <div class="avatar_box">
         <img src="../assets/diamon.png" alt="">
       </div>
-       
+       -->
       <!-- 登录表单区域 -->
       <el-form-item>
       <el-input type="text" v-model="loginForm.email"
