@@ -23,6 +23,9 @@
                 <el-breadcrumb-item >
                     <router-link :to="{path:'/workbench'}">工作空间</router-link>
                 </el-breadcrumb-item>
+                <el-breadcrumb-item >
+                    <router-link :to="{path:'/workbench'}">工作台</router-link>
+                </el-breadcrumb-item>
                 <el-breadcrumb-item >最近评论</el-breadcrumb-item>
             </el-breadcrumb>
         </el-row>
@@ -31,37 +34,31 @@
     <div style="height:20px;background-color:#FAFAFA">
     </div>
   <el-table
-      :data="articles"
+      :data="comments"
       style="width: 100%"
       max-height="600">
 <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="文章ID">
-            <span>{{ props.row.id }}</span>
-          </el-form-item>
-           <el-form-item label="所属团队">
-            <span>{{ props.row.doc_team }}</span>
-          </el-form-item> 
-          <el-form-item label="文章摘要">
-            <span>{{ props.row.doc_abstract }}</span>
+          <el-form-item label="评论内容">
+            <span>{{ props.row.des}}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
     <el-table-column
-        prop="doc_title"
+        prop="id"
+        label="评论id"
+        width="220">
+    </el-table-column>
+    <el-table-column
+        prop="doc.id"
         label="文章标题"
         width="220">
     </el-table-column>     
     <el-table-column
-        prop="doc_found_date"
-        label="创建日期"
-        width="220">
-    </el-table-column>
-    <el-table-column
-        prop="doc_founder"
-        label="创建人"
+        prop="time"
+        label="最后评论时间"
         width="220">
     </el-table-column>
    <el-table-column
@@ -69,8 +66,8 @@
       label="操作"
       width="160">
       <template slot-scope="scope">
-        <el-button @click="viecollection(scope.row.id)" type="text" size="small">查看文章</el-button>
-        <el-button @click="deletecomment()" type="text" size="small">删除评论</el-button>
+        <el-button @click="viecollection(scope.row.doc.id)" type="text" size="small">查看文章</el-button>
+        <el-button @click="deletecomment(scope.row.id)" type="text" size="small">删除评论</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -90,7 +87,7 @@ export default {
   },
   data () {
       return{
-          articles:[
+          comments:[
             //  {id:1,title:"one",abs:"jdklfjklqjwklrew"},
             // {id:2,title:"two",abs:"sdfwerwetretwerwet"},
             // {id:3,title:"emm",abs:"dfjkwljekjlkwjkel"},
@@ -99,21 +96,21 @@ export default {
       }
   },
   mounted () {
-      this.loadArticles()  
+      this.loadcomments()
+      console.log(this.comments)
         },
     methods: {
-        loadArticles(){
+        loadcomments(){
         //使用的阅读列表进行的测试
        var _this = this
        //console.log(this.$store.)
-        this.$axios.get('/doc/docread/'+this.$store.state.user.id).then(resp => {
+        this.$axios.get('/comment/getcommentbyuser/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
-                _this.articles=resp.data.result
+                _this.comments=resp.data.result
                
           }
         })
-        },
-        
+        },       
         viecollection(id){
             this.$router.push({
                 path:'/articledetail',
@@ -124,8 +121,13 @@ export default {
 
         },
         //删除函数
-        deletecomment(){
-            
+        deletecomment(id){
+        this.$axios.delete('/comment/delete/'+this.$store.state.user.id+'/'+id).then(resp => {        
+            if (resp && resp.data.code === 200){
+                 alert("删除成功")
+                this.loadcomments()
+          }                          
+        })           
         }
     }
 };

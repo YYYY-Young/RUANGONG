@@ -23,6 +23,9 @@
                 <el-breadcrumb-item >
                     <router-link :to="{path:'/workbench'}">工作空间</router-link>
                 </el-breadcrumb-item>
+                <el-breadcrumb-item >
+                    <router-link :to="{path:'/workbench'}">工作台</router-link>
+                </el-breadcrumb-item>
                 <el-breadcrumb-item >最近编辑</el-breadcrumb-item>
             </el-breadcrumb>
         </el-row>
@@ -31,37 +34,40 @@
     <div style="height:20px;background-color:#FAFAFA">
     </div>
   <el-table
-      :data="articles"
+      :data="articlesrecord"
       style="width: 100%"
       max-height="600">
 <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
           <el-form-item label="文章ID">
-            <span>{{ props.row.id }}</span>
+            <span>{{ props.row.doc.id }}</span>
           </el-form-item>
-           <el-form-item label="所属团队">
-            <span>{{ props.row.doc_team }}</span>
-          </el-form-item> 
+          <el-form-item label="创建人id">
+            <span>{{ props.row.doc.doc_founder}}</span>
+          </el-form-item>
+          <el-form-item label="创建时间">
+            <span>{{ props.row.doc.doc_found_date}}</span>
+          </el-form-item>
           <el-form-item label="文章摘要">
-            <span>{{ props.row.doc_abstract }}</span>
+            <span>{{ props.row.doc.doc_abstract }}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
     <el-table-column
-        prop="doc_title"
+        prop="doc.doc_title"
         label="文章标题"
         width="220">
     </el-table-column>     
     <el-table-column
-        prop="doc_found_date"
-        label="创建日期"
+        prop="doc_open_time"
+        label="最近编辑时间"
         width="220">
     </el-table-column>
     <el-table-column
-        prop="doc_founder"
-        label="创建人"
+        prop="uid"
+        label="最近编辑人id"
         width="220">
     </el-table-column>
    <el-table-column
@@ -69,7 +75,8 @@
       label="操作"
       width="160">
       <template slot-scope="scope">
-        <el-button @click="viecollection(scope.row.id)" type="text" size="small">查看文章</el-button>
+        <el-button @click="viecollection(scope.row.doc.id)" type="text" size="small">查看文章</el-button>
+        <el-button @click="deleterecord(scope.row.id)" type="text" size="small">删除记录</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -89,7 +96,7 @@ export default {
   },
   data () {
       return{
-          articles:[
+          articlesrecord:[
             //  {id:1,title:"one",abs:"jdklfjklqjwklrew"},
             // {id:2,title:"two",abs:"sdfwerwetretwerwet"},
             // {id:3,title:"emm",abs:"dfjkwljekjlkwjkel"},
@@ -105,9 +112,9 @@ export default {
         //使用的阅读列表进行的测试
        var _this = this
        //console.log(this.$store.)
-        this.$axios.get('/doc/docread/'+this.$store.state.user.id).then(resp => {
+        this.$axios.get('/doc/list/edit/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
-                _this.articles=resp.data.result
+                _this.articlesrecord=resp.data.result
                
           }
         })
@@ -122,7 +129,17 @@ export default {
             })
 
         },
-        //删除函数
+        deleterecord(id){
+          var _this=this
+          this.$axios.delete('/doc/deleterecord/'+id).then(resp =>{
+            if (resp && resp.data.code === 200){
+                 alert("删除成功")
+                this.loadArticles()
+          }
+        }
+        )
+      }
+        
     }
 };
 </script>

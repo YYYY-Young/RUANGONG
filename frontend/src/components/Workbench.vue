@@ -24,16 +24,16 @@
                <span>创建文档</span>
            </el-col>
            <el-col :span="5">              
-               <img src="../assets/images/design.png" class="image-1" @click="testclick()"> 
-               <span>测试跳转</span>              
+               <img src="../assets/images/design.png" class="image-1" @click="recentreview()"> 
+               <span>最近评论</span>              
            </el-col> 
            <el-col :span="5">               
-               <img src="../assets/images/design.png" class="image-1">      
-               <span>文档1</span>         
+               <img src="../assets/images/design.png" class="image-1" @click="recenteditor()">      
+               <span>最近编辑</span>         
            </el-col>
            <el-col :span="5">               
                <img src="../assets/images/more-design.png" class="image-1" @click="morearticle()">    
-               <span>更多最近浏览</span>           
+               <span>最近浏览</span>           
            </el-col>                 
        </el-row>
       </el-main>
@@ -57,10 +57,13 @@ export default {
 		morearticle(){
             this.$router.push('/articles')
     },
-    testclick(){
-            this.$router.push('/testbench')
+    recentreview(){
+            this.$router.push('/recentreview')
+    },
+    recenteditor(){
+            this.$router.push('/recenteditor')
     }
-  }
+  },
 };
 </script>
 

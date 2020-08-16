@@ -33,16 +33,20 @@
  <div style="margin-top: 10px;background-color:#FAFAFA" >       
        <div class="articles-area" style="background-color:#FAFAFA">
            <el-card style="text-align: left;background-color:#FAFAFA;">
-                <div v-for="item in articles" :key="item.id" style="background-color:#FAFAFA">                  
+                <div v-for="item in articlesrecord" :key="item.id" style="background-color:#FAFAFA">                  
                     <div style="float:left;width:85%;height: 150px;background-color:#FAFAFA">
+                      <el-divider></el-divider>
                       <row>
-                        <el-divider></el-divider> 
-                        <router-link class="article-link" :to="{path:'/articledetail',query:{id: item.id}}"><span style="font-size: 20px"><strong>{{item.doc_title}}</strong></span></router-link>
+                        <router-link class="article-link" :to="{path:'/articledetail',query:{id: item.doc.id}}"><span style="font-size: 20px"><strong>{{item.doc.doc_title}}</strong></span></router-link>
                       </row>
+                     
                       <row>
-                      <p style="text-align:left"><i>{{item.doc_abstract}}</i></p> 
+                      <p style="text-align:left"><i>{{item.doc.doc_abstract}}</i></p> 
                       </row>   
-                          <!-- <el-divider content-position="left">{{item.doc_abstract}}</el-divider>     -->                                     
+                      <row>
+                          <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="deleterecord(item.id)">删除记录</el-button>
+                      </row>
+                           <el-divider content-position="right">最后浏览时间：{{item.doc_open_time}}</el-divider>                                          
                     </div>                                                     
                 </div> 
            </el-card> 
@@ -72,13 +76,7 @@ export default {
   data () {
       return {
         docid: [],
-        articles: [
-           
-           // {id:1,title:"one",abs:"jdklfjklqjwklrew"},
-           // {id:2,title:"two",abs:"sdfwerwetretwerwet"},
-           // {id:3,title:"emm",abs:"dfjkwljekjlkwjkel"},
-           // {id:4,title:"qaq",abs:"djfkljwkerklwjeklr"},
-        ],
+        articlesrecord:[],
         pageSize: 4,
         total: 5
       }
@@ -90,12 +88,23 @@ export default {
         loadArticles (){
        var _this = this
        //console.log(this.$store.)
-        this.$axios.get('/doc/docread/'+this.$store.state.user.id).then(resp => {
+        this.$axios.get('/doc/list/read/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
-                _this.articles=resp.data.result
+                _this.articlesrecord=resp.data.result
                
           }
         })
+      },
+      deleterecord(id){
+        var _this=this
+        this.$axios.delete('/doc/deleterecord/'+id).then(resp =>{
+          if (resp && resp.data.code === 200){
+            alert("删除成功")
+            this.loadArticles()
+          }
+
+        }
+        )
       }
        },
          
