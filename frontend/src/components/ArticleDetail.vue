@@ -37,7 +37,8 @@
   <el-row style="text-align:left;margin-top:10px">
 		<el-button style="background-color: #F5F5F5;margin-left:10px;height:30px;width:100px"   @click="editorarticle()">编辑文章</el-button>
 		<el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="deleteArticle (article.id)">删除文章</el-button>
-    <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" >查看/发表评论</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="viewcomments()" >查看/发表评论</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" icon="el-icon-star-off" @click="likeAnddislike()" >收藏</el-button>
 	</el-row>
     <el-card style="text-align: left;width: 990px;margin: 10px auto 0 auto;min-height:500px;max-height:650px ">
       <div>   
@@ -69,11 +70,13 @@ import Menu from './menu.vue'
   },
     data () {
       return {
-        article: {}
+        article: {},
+        //likes:""
       }
     },
     mounted () {
       this.loadArticle()
+      //this.loadLikes()
     },
     methods: {
       loadArticle () {
@@ -86,6 +89,14 @@ import Menu from './menu.vue'
         })
        
       },
+      // loadLikes(){
+      //   this.$axios.get('/doc/likes/'+this.article.id).then(resp => {
+      //     if (resp && resp.data.code === 200){
+      //       this.likes=resp.data.result
+      //     }
+      //   })
+
+      // },
       editorarticle(){
         if(this.$store.state.user.id!=this.article.doc_founder&&this.article.doc_edit){
           alert("你没有编辑权限！")
@@ -125,6 +136,44 @@ import Menu from './menu.vue'
             message: '已取消删除'
           })
         })
+      },
+      likeAnddislike(){
+        this.$axios.get('/doc/islike/'+this.$store.state.user.id+'/'+this.article.id).then(resp =>{
+          if (resp&&resp.data.code=== 200){
+            console.log(resp.data.result)
+            if(resp.data.result=="没有收藏记录"){
+                  this.$axios.post('/doc/editrecord', {
+                      uid:this.$store.state.user.id,
+                      docid:this.article.id,
+                      doc_like:true
+            }
+              ).then(resp => {
+              if (resp && resp.data.code === 200) {
+                this.$message({
+                  type: 'info',
+                  message: '收藏成功'
+                })
+                  this.loadArticle()
+                  this.loadLikes()
+
+              }
+            })
+            }else{
+              alert("已被收藏!")
+            }
+          }
+        })
+      },
+      viewcomments(){
+        this.$router.push(
+          {
+            path: '/comments',
+            query: {
+              article_id:this.article.id,
+              article_title:this.article.doc_title
+            }
+          }
+        )
       }
 
     }

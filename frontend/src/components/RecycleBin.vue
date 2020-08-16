@@ -103,21 +103,51 @@ export default {
         //使用的阅读列表进行的测试
        var _this = this
        //console.log(this.$store.)
-        this.$axios.get('/doc/docread/'+this.$store.state.user.id).then(resp => {
+        this.$axios.get('/doc/trashdocs/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
                 _this.articles=resp.data.result
-               
+                 console.log(_this.articles)              
           }
         })
         },
         //恢复函数
         restorearticle(id){
-                console.log(id)
+        console.log(id)
+        this.$axios.delete('/notrash/'+this.$store.state.user.id+'/'+id).then(resp => {
+          if (resp && resp.data.code === 200) {
+          this.$message({
+            type: 'info',
+            message: resp.data.result
+          }) 
+          this.loadArticles()                      
+          }
+        })              
         },
         //删除函数
-        deletearticle(id){
-            console.log(id)
-        }
+      deletearticle (id) {
+        this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            this.$axios.delete('/doc/deleteone/'+id+'/'+this.$store.state.user.id).then(resp => {
+                // this.loadArticles()
+                 this.$message({
+                   type: 'info',
+                   message: '永久删除'
+                 })
+                this.loadArticles()
+              
+            })
+          }
+        ).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+
+      }
     }
 };
 </script>

@@ -52,7 +52,7 @@
         width="220">
     </el-table-column>
     <el-table-column
-        prop="doc.id"
+        prop="doc.doc_title"
         label="文章标题"
         width="220">
     </el-table-column>     

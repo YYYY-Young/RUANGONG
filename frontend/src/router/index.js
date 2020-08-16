@@ -35,6 +35,12 @@ const routes = [
         import ('../components/RecentEditor.vue'),
     },
     {
+        path: '/comments',
+        name: 'Comments',
+        component: () =>
+        import ('../components/Comments.vue'),
+    },
+    {
         path: '/recentreview',
         name: 'RecentReview',
         component: () =>
