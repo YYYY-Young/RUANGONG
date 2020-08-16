@@ -1,110 +1,99 @@
 <template>
-  <div class="border">
-		<div id="bg">
-			background
-		</div>
-		<div class="page">
-			<div class="sidebar">
-                 <!-- 
-				<a href="www.baidu.com" id="logo"><img src="../assets/images/logo.png" alt="logo"></a>
-                 -->
-                 
-                <ul>
-					<li class="selected">
-						<a href="www.baidu.com">工作台</a>
-					</li>
-					<li>
-						<a href="www.baidu.com">收件箱</a>
-					</li>
-					<li>
-						<a href="www.baidu.com">我的桌面</a>
-					</li>
-					<li>
-						<a href="www.baidu.com">团队空间</a>
-					</li>
-					<li>
-						<a href="www.baidu.com">回收站</a>
-					</li>
-					<li>
-						<a href="www.baidu.com">帮助中心</a>
-					</li>
-				</ul>
-				
-				
-			</div>
-			<div class="body">
-				<div>
-					<h2>我的文档</h2>
-						<p>
-						最近浏览
-						</p> 
-						<div>
-							<ul>
-								<li id="link1" style="">
-									<img src="../assets/images/design.png"  style="width:95%;height:80%" @click="createarticle()">
-									<span>创建新文档</span>
-								</li>
-								<li id="link2">
-									<img src="../assets/images/design.png" style="width:95%;height:80%">
-									<span>文档1</span>
-								</li>
-								<li id="link3">
-									<img src="../assets/images/design.png" style="width:95%;height:80%">
-									<span>文档2</span>
-								</li>
-								<li id="link4">
-									<img src="../assets/images/more-design.png" style="width:95%;height:80%" @click="morearticle()">
-									<span>更多</span>
-								</li>
-							</ul>
-							
-						</div>                      					
-				</div>
-			</div>
-		</div>
-        
-	</div>
-</template>
 
+ <el-container>
+   <el-header height="50px"></el-header>
+    
+<el-container>   
+    <el-aside width="170px">
+    <Menu />
+    </el-aside>
+      <el-main>
+        <el-row>
+            <div style="height:30px;background-color:#FAFAFA">
+            </div>
+        </el-row>
+        <el-row>
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item >工作空间</el-breadcrumb-item>
+                <el-breadcrumb-item >工作台</el-breadcrumb-item>
+            </el-breadcrumb>
+        </el-row>
+       <el-row :gutter="20">
+           <el-col :span="5">
+               <img src="../assets/images/design.png" class="image-1"  @click="createarticle()">
+               <span>创建文档</span>
+           </el-col>
+           <el-col :span="5">              
+               <img src="../assets/images/design.png" class="image-1" @click="testclick()"> 
+               <span>测试跳转</span>              
+           </el-col> 
+           <el-col :span="5">               
+               <img src="../assets/images/design.png" class="image-1">      
+               <span>文档1</span>         
+           </el-col>
+           <el-col :span="5">               
+               <img src="../assets/images/more-design.png" class="image-1" @click="morearticle()">    
+               <span>更多最近浏览</span>           
+           </el-col>                 
+       </el-row>
+      </el-main>
+</el-container> 
+</el-container>
+
+</template> 
 <script>
+import Menu from './menu.vue'
 export default {
-  name: 'Workbench',
+ components: {
+   Menu
+  },
   props: {
     msg: String
   },
   methods: {
 		createarticle(){
-			let articleUrl = this.$router.resolve({
-				name: 'ArticleEditor', 
-
-			})
-			window.open(articleUrl.href,'_blank')
+            this.$router.push('/editor')
 		},
 		morearticle(){
-			let articleUrl = this.$router.resolve({
-				name: 'Articles', 
-
-			})
-			window.open(articleUrl.href,'_blank')
-		}
+            this.$router.push('/articles')
+    },
+    testclick(){
+            this.$router.push('/testbench')
+    }
   }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style >
-.card{
-width: auto;
-height: 10px;
-}
-.image{
-width: 100%;
-display: block;
-}
-.la{
-width: auto;
-height: auto;
-}
-@import "../assets/css/Workbench.css"
-
-</style>
+  * {
+        margin:0px; 
+    padding:0px; 
+  }
+  .el-aside {
+    background-color: #F5F5F5;
+    color: #333;
+    text-align: center;
+    min-height:800px;
+    margin:0px; 
+    padding:0px;
+    
+  }
+   .el-header {
+    background-color: #ffffff;
+    margin:0px; 
+    padding:0px;
+  }
+  
+  .el-main {
+    background-color:#FAFAFA;
+    color: #333;
+    text-align: center;
+    min-height:800px;
+    margin:0px; 
+    padding:0px;
+  }
+  .image-1 {
+      width: 100%;
+      height: 100%;
+  }
+</style> 

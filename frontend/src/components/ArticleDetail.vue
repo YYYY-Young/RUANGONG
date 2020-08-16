@@ -1,32 +1,72 @@
 <template>
-  <div>
-      <el-row style="margin: 18px 0px 0px 18px ">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item >最近浏览</el-breadcrumb-item>
-        <el-breadcrumb-item>文章列表</el-breadcrumb-item>
-        <el-breadcrumb-item>{{article.doc_title}}</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-row>
-  <div class="articles-area">
-    <el-card style="text-align: left;width: 990px;margin: 35px auto 0 auto;min-height:500px ">
-      <div>
-   
+ <el-container>
+<!-- 顶栏容器开始 -->
+   <el-header height="50px"></el-header>
+<!-- 顶栏容器结束 --> 
+<el-container>  
+<!-- 侧边栏容器开始 -->   
+    <el-aside width="170px">
+    <Menu />
+    </el-aside>
+<!-- 侧边栏容器结束 -->
+<!-- 主要渲染栏容器开始 -->
+      <el-main>
+        <el-row>
+            <div style="height:30px;background-color:#FAFAFA">
+            </div>
+        </el-row>
+<!-- 面包屑栏目开始 -->
+        <el-row>
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <!--现在在第三个标签所示页面，那么就可以通过点击前面的标签返回其页面-->
+                <el-breadcrumb-item >
+                    <router-link :to="{path:'/workbench'}">工作空间</router-link>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item >
+                    <router-link :to="{path:'/workbench'}">工作台</router-link>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item >
+                    <router-link :to="{path:'/articles'}">最近阅读</router-link>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item >{{article.doc_title}}</el-breadcrumb-item>
+            </el-breadcrumb>
+        </el-row>
+<!-- 面包屑栏目结束 -->
+<!-- 下面开始写要渲染的东西 -->
+ <div class="articles-area">
+  <el-row style="text-align:left;margin-top:10px">
+		<el-button style="background-color: #F5F5F5;margin-left:10px;height:30px;width:100px"   @click="editorarticle()">编辑文章</el-button>
+		<el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="deleteArticle (article.id)">删除文章</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" >查看/发表评论</el-button>
+	</el-row>
+    <el-card style="text-align: left;width: 990px;margin: 10px auto 0 auto;min-height:500px;max-height:650px ">
+      <div>   
         <span style="font-size: 20px"><strong>{{article.doc_title}}</strong></span>
-        <el-divider content-position="left">{{article.doc_abstract}}</el-divider>
+        <div style="height:20px;background-color:#FAFAFA"></div>
+        <el-divider content-position="left" >{{article.doc_abstract}}</el-divider>
+        <div style="height:20px;background-color:#FAFAFA"></div>
         <div class="markdown-body">
           <div v-html="article.doc_content_html"></div>
-        </div>
-         <el-button type="primary" @click="editorarticle()">编辑文章</el-button> 
-         <el-button type="danger" @click="deleteArticle (article.id)">删除文章</el-button>    
-      </div>
+         </div>
+         <!-- <el-button type="primary" @click="editorarticle()">编辑文章</el-button> 
+         <el-button type="danger" @click="deleteArticle (article.id)">删除文章</el-button>     -->
+      </div> -
     </el-card>
   </div>
-  </div>
+      </el-main>
+<!-- 主要渲染栏容器结束 -->
+</el-container> 
+</el-container>
 </template>
 
+
 <script>
+import Menu from './menu.vue'
   export default {
     name: 'ArticleDetails',
+    components: {
+   Menu
+  },
     data () {
       return {
         article: {}
@@ -47,6 +87,9 @@
        
       },
       editorarticle(){
+        if(this.$store.state.user.id!=this.article.doc_founder&&this.article.doc_edit){
+          alert("你没有编辑权限！")
+        }else{
         this.$router.push(
           {
             name: 'ArticleChange',
@@ -55,6 +98,8 @@
             }
           }
         )
+        }
+
      },
       deleteArticle (id) {
         this.$confirm('此操作将文章放入回收站, 是否继续?', '提示', {
@@ -70,6 +115,7 @@
                   type: 'info',
                   message: '已移到回收站'
                 })
+                this.$router.push('/articles')
               }
             })
           }
@@ -86,4 +132,31 @@
 </script>
 <style scoped>
   @import "../assets/css/markdown.css";
+  * {
+        margin:0px; 
+    padding:0px; 
+  }
+  .el-aside {
+    background-color: #F5F5F5;
+    color: #333;
+    text-align: center;
+    min-height:800px;
+    margin:0px; 
+    padding:0px;
+    
+  }
+   .el-header {
+    background-color: #ffffff;
+    margin:0px; 
+    padding:0px;
+  }
+  
+  .el-main {
+    background-color:#FAFAFA;
+    color: #333;
+    text-align: center;
+    min-height:800px;
+    margin:0px; 
+    padding:0px;
+  }
 </style>
