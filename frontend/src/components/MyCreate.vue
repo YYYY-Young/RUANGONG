@@ -2,7 +2,9 @@
 
  <el-container>
 <!-- 顶栏容器开始 -->
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+     <Head />
+   </el-header>
 <!-- 顶栏容器结束 --> 
 <el-container>  
 <!-- 侧边栏容器开始 -->   
@@ -84,9 +86,11 @@
 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
 export default {
  components: {
-   Menu
+   Menu,
+   Head
   },
   data () {
       return{

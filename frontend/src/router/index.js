@@ -8,6 +8,28 @@ import User from '../components/User.vue'
 Vue.use(VueRouter)
 
 const routes = [
+    {
+        path: "/",
+        redirect:'/login'
+    },
+    {
+        path: "/teameditor",
+        name: "Teameditor",
+        component: () =>
+            import ('../components/TeamEditor.vue'),
+    },
+    {
+        path: "/myteam",
+        name: "MyTeam",
+        component: () =>
+            import ('../components/MyTeam.vue'),
+    },
+    {
+        path: "/teamdetail",
+        name: "TeamDetail",
+        component: () =>
+            import ('../components/TeamDetail.vue'),
+    },
 
     {
         path: '/testbench',

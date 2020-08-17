@@ -1,7 +1,9 @@
 <!--该组件为编辑器组件-->
 <template>
  <el-container>
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+     <Head />
+   </el-header>
     
 <el-container>   
     <el-aside width="170px">
@@ -34,6 +36,7 @@
 	<el-row style="text-align:left">
 		<el-button style="background-color: #F5F5F5;margin-left:10px"  @click="dialogVisible = true">输入摘要</el-button>
 		<el-button style="background-color: #F5F5F5;margin-right:10px" @click="permissionVisible= true">设置文章权限</el-button>
+    
 	</el-row>
     <el-row>
         <!--编辑文本内容,待修改-->
@@ -133,10 +136,12 @@
 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
   export default {
 	name: 'Editor',
 	components: {
-		Menu
+    Menu,
+    Head
 	},
     data () {
       return {
@@ -161,7 +166,7 @@ import Menu from './menu.vue'
           var _this=this
         // articleTitle没写则无法提交
         //响应还未加
-
+        console.log(value)
         
         this.$confirm('是否保存并发布文章?', '提示', {
           confirmButtonText: '确定',
@@ -201,7 +206,7 @@ import Menu from './menu.vue'
                   type: 'info',
                   message: '已保存成功'
                 })
-                this.$router.push('/workbench')
+                 this.$router.push('/workbench')
 
               }
             })

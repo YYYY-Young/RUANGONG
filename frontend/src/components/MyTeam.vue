@@ -2,9 +2,7 @@
 
  <el-container>
 <!-- 顶栏容器开始 -->
-   <el-header height="50px">
-     <Head />
-   </el-header>
+   <el-header height="50px"></el-header>
 <!-- 顶栏容器结束 --> 
 <el-container>  
 <!-- 侧边栏容器开始 -->   
@@ -23,12 +21,9 @@
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <!--现在在第三个标签所示页面，那么就可以通过点击前面的标签返回其页面-->
                 <el-breadcrumb-item >
-                    <router-link :to="{path:'/workbench'}">工作空间</router-link>
+                    <router-link :to="{path:'/myteam'}">团队空间</router-link>
                 </el-breadcrumb-item>
-                <el-breadcrumb-item >
-                    <router-link :to="{path:'/workbench'}">工作台</router-link>
-                </el-breadcrumb-item>
-                <el-breadcrumb-item >最近编辑</el-breadcrumb-item>
+                <el-breadcrumb-item >我的团队</el-breadcrumb-item>
             </el-breadcrumb>
         </el-row>
 <!-- 面包屑栏目结束 -->
@@ -36,49 +31,44 @@
     <div style="height:20px;background-color:#FAFAFA">
     </div>
   <el-table
-      :data="articlesrecord"
-      style="width: 100%"
+      :data="userteams"
+      style="width: 100%;"
       max-height="600">
 <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="文章ID">
-            <span>{{ props.row.doc.id }}</span>
+         
+          <el-form-item label="团队简介">
+            <span>{{ props.row.team.des}}</span>
           </el-form-item>
-          <el-form-item label="创建人id">
-            <span>{{ props.row.doc.doc_founder}}</span>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <span>{{ props.row.doc.doc_found_date}}</span>
-          </el-form-item>
-          <el-form-item label="文章摘要">
-            <span>{{ props.row.doc.doc_abstract }}</span>
+           <el-form-item label="团队创建人ID">
+            <span>{{ props.row.team.leaderid}}</span>
           </el-form-item>
         </el-form>
       </template>
     </el-table-column>
     <el-table-column
-        prop="doc.doc_title"
-        label="文章标题"
+        prop="team.teamname"
+        label="团队名称"
         width="220">
-    </el-table-column>     
-    <el-table-column
-        prop="doc_open_time"
-        label="最近编辑时间"
+    </el-table-column> 
+           <el-table-column
+        prop="team.id"
+        label="团队ID"
         width="220">
-    </el-table-column>
-    <el-table-column
-        prop="uid"
-        label="最近编辑人id"
+    </el-table-column>  
+       <el-table-column
+        prop="team.time"
+        label="创建时间"
         width="220">
-    </el-table-column>
+    </el-table-column>  
    <el-table-column
       fixed="right"
       label="操作"
-      width="160">
+      width="220">
       <template slot-scope="scope">
-        <el-button @click="viecollection(scope.row.doc.id)" type="text" size="small">查看文章</el-button>
-        <el-button @click="deleterecord(scope.row.id)" type="text" size="small">删除记录</el-button>
+        
+        <el-button @click="viewteam(scope.row)" type="text" size="small">查看团队空间</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -92,58 +82,43 @@
 
 <script>
 import Menu from './menu.vue'
-import Head from './Head.vue'
 export default {
  components: {
-   Menu,
-   Head
+   Menu
   },
   data () {
       return{
-          articlesrecord:[
-            //  {id:1,title:"one",abs:"jdklfjklqjwklrew"},
-            // {id:2,title:"two",abs:"sdfwerwetretwerwet"},
-            // {id:3,title:"emm",abs:"dfjkwljekjlkwjkel"},
-            // {id:4,title:"qaq",abs:"djfkljwkerklwjeklr"},             
+          userteams:[
+                   
           ]
       }
   },
   mounted () {
-      this.loadArticles()  
+      this.loadTeams()  
         },
     methods: {
-        loadArticles(){
+        loadTeams(){
         //使用的阅读列表进行的测试
        var _this = this
-       //console.log(this.$store.)
-        this.$axios.get('/doc/list/edit/'+this.$store.state.user.id).then(resp => {
+        this.$axios.get('/team/findteams/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
-                _this.articlesrecord=resp.data.result
-               
+                _this.userteams=resp.data.result
+               console.log(_this.userteams)
           }
         })
         },
-        
-        viecollection(id){
+        viewteam(userteam){
             this.$router.push({
-                path:'/articledetail',
+                path:'/teamdetail',
                 query:{
-                    id: id
+                    tid:userteam.team.id,
+                    teamname: userteam.team.teamname,
+                    issys: userteam.issys
+                    
                 }
             })
 
-        },
-        deleterecord(id){
-          var _this=this
-          this.$axios.delete('/doc/deleterecord/'+id).then(resp =>{
-            if (resp && resp.data.code === 200){
-                 alert("删除成功")
-                this.loadArticles()
-          }
         }
-        )
-      }
-        
     }
 };
 </script>
@@ -189,4 +164,3 @@ export default {
     width: 100%;
   }
 </style> 
-

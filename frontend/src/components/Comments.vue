@@ -2,7 +2,9 @@
 
  <el-container>
 <!-- 顶栏容器开始 -->
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+    <Head />
+   </el-header>
 <!-- 顶栏容器结束 --> 
 <el-container>  
 <!-- 侧边栏容器开始 -->   
@@ -52,7 +54,7 @@
     <div style="height:auto">
       <el-row>
 <!-- 之后这个名字是通过方法里的一个函数由ID获取名字 -->
-        <el-col :span="12" style="text-align:left">{{this.$route.query.article_title}}:</el-col>
+        <el-col :span="12" style="text-align:left">{{item.uid}}:</el-col>
       </el-row>
       <div style="width:95%;margin-left:25px;height:auto">
           <p style="text-align:left">{{item.des}}</p>
@@ -73,9 +75,11 @@
 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
 export default {
  components: {
-   Menu
+   Menu,
+   Head
   },
   data(){
     return{
@@ -111,11 +115,11 @@ this.loadcomments()
 				alert("评论内容不能为空！")
 				return
         }     
-
+              console.log(this.text)
             this.$axios.post('/comment/save', {
                 docid: this.$route.query.article_id,
                 uid: this.$store.state.user.id,
-                des: this.text
+                des: this.text               
             }
               ).then(resp => {
               if (resp && resp.data.code === 200) {

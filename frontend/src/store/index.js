@@ -36,7 +36,8 @@ export default new Vuex.Store({
             state.username = ''
             window.localStorage.removeItem('username')
             state.adminMenus = []
-        }
+        },
+
     },
     actions: {}
 })

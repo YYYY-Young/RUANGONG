@@ -1,7 +1,9 @@
 <template>
  <el-container>
 <!-- 顶栏容器开始 -->
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+     <Head />
+   </el-header>
 <!-- 顶栏容器结束 --> 
 <el-container>  
 <!-- 侧边栏容器开始 -->   
@@ -40,7 +42,7 @@
     <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="viewcomments()" >查看/发表评论</el-button>
     <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" icon="el-icon-star-off" @click="likeAnddislike()" >收藏</el-button>
 	</el-row>
-    <el-card style="text-align: left;width: 990px;margin: 10px auto 0 auto;min-height:500px;max-height:650px ">
+    <el-card style="text-align: left;width: 990px;margin: 10px auto 0 auto;min-height:500px; ">
       <div>   
         <span style="font-size: 20px"><strong>{{article.doc_title}}</strong></span>
         <div style="height:20px;background-color:#FAFAFA"></div>
@@ -63,10 +65,12 @@
 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
   export default {
     name: 'ArticleDetails',
     components: {
-   Menu
+   Menu,
+   Head
   },
     data () {
       return {
@@ -77,6 +81,7 @@ import Menu from './menu.vue'
     mounted () {
       this.loadArticle()
       //this.loadLikes()
+      console.log(this.article)
     },
     methods: {
       loadArticle () {
@@ -84,7 +89,7 @@ import Menu from './menu.vue'
         this.$axios.get('/doc/getone/'+this.$route.query.id+'/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
             _this.article = resp.data.result
-            console.log(_this.article)
+            //console.log(_this.article)
           }
         })
        

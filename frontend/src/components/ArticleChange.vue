@@ -1,7 +1,9 @@
 <!--该组件为编辑器组件-->
 <template>
  <el-container>
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+     <Head />
+   </el-header>
     
 <el-container>   
     <el-aside width="170px">
@@ -37,7 +39,8 @@
     </el-row> 
 	<el-row style="text-align:left">
 		<el-button style="background-color: #F5F5F5;margin-left:10px"  @click="dialogVisible = true">输入摘要</el-button>
-     <el-button style="background-color: #F5F5F5;margin-right:10px" @click="editorpermission()">权限修改</el-button>  
+     <el-button style="background-color: #F5F5F5;margin-right:10px" @click="editorpermission()">权限修改</el-button> 
+     <!-- <el-button @click="test()">test</el-button>  -->
 	</el-row>
     <el-row >
         <!--编辑文本内容,待修改-->
@@ -137,10 +140,12 @@
 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
   export default {
 	name: 'Editor',
 	components: {
-		Menu
+    Menu,
+    Head
 	},
     data () {
       return {
@@ -162,8 +167,13 @@ import Menu from './menu.vue'
         this.permissions[0]=this.article.doc_recycle
 
       }
+      
+    
     },
     methods: {
+      // test(){
+      //   console.log(this.article.doc_content_md)
+      // },
         editorpermission(){
           if(this.$store.state.user.id==this.article.doc_founder){
             this.permissionVisible=true

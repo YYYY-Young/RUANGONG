@@ -1,7 +1,9 @@
 <template>
 
  <el-container>
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+     <Head />
+   </el-header>
     
 <el-container>   
     <el-aside width="170px">
@@ -43,9 +45,11 @@
 </template> 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
 export default {
  components: {
-   Menu
+   Menu,
+   Head
   },
   props: {
     msg: String
