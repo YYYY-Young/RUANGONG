@@ -93,7 +93,6 @@
 
 <el-dialog  top="5vh" center="false" title="成员管理" :visible.sync="dialogFormVisible" width="40%">
   
-  <el-form :model="form">
     <div>
     <div >
         <el-input v-model="input" placeholder="请输入邀请用户id"></el-input>
@@ -107,7 +106,7 @@
         <el-button style="float:right;" type="success" :disabled="!adderissys" @click="addteammate()">添加协作者</el-button>
     </div>
     </div>
-  </el-form>   
+  
     <el-divider></el-divider>
     <el-table
     :data="tableData"
@@ -163,18 +162,7 @@ export default {
           tableData: [],
         teamname:'',
         search: '',
-        dialogTableVisible: false,
         dialogFormVisible: false,
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
         formLabelWidth: '120px',
         input:'',
         issys:'false',
@@ -184,18 +172,20 @@ export default {
       
   },
   mounted () {
+      this.teamname=this.$route.query.teamname,
+      this.tid=this.$route.query.tid,
       this.adderissys=this.$route.query.issys,
       this.loadArticles(),
-      this.loadtableData(),
-      this.teamname=this.$route.query.teamname,
-      this.tid=this.$route.query.tid
+      this.loadtableData()
+      
+      
         },
         
     methods: {
       loadtableData(){
          var _this = this
-         this.$axios.get('/team/findusers/'+this.$route.query.tid
-              ).then(resp => {
+         this.$axios.get('/team/findusers/'+this.tid).then(resp => {
+                console.log("进来了")
               if(resp && resp.data.code === 200) {
                 _this.tableData=resp.data.result
                 console.log(_this.tableData)             
@@ -236,6 +226,8 @@ export default {
          
                 
         })
+      
+        console.log(this.tableData)
         },
         loadArticles(){
        var _this = this
