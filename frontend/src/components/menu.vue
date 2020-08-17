@@ -19,9 +19,8 @@
         <el-menu-item-group >
           <el-menu-item index="1-1" @click="returnbench()">工作台</el-menu-item>
           <el-menu-item index="1-2" @click="gocollections()">我的收藏</el-menu-item>
-          <el-menu-item index="1-3" @click="gomycreate()">我的创建</el-menu-item>
-          <el-menu-item index="1-4" @click="gorecenteditor()">最近编辑</el-menu-item>
-          <el-menu-item index="1-5" @click="gorecentreview()">最近评论</el-menu-item>
+          <el-menu-item index="1-3" @click="gomycreate()">我的文章</el-menu-item>
+      
         </el-menu-item-group>
 </el-submenu>
       <el-submenu index="2" style="background-color: #F5F5F5">

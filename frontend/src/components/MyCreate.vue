@@ -25,7 +25,7 @@
                 <el-breadcrumb-item >
                     <router-link :to="{path:'/workbench'}">工作空间</router-link>
                 </el-breadcrumb-item>
-                <el-breadcrumb-item >我的创建</el-breadcrumb-item>
+                <el-breadcrumb-item >我的文章</el-breadcrumb-item>
             </el-breadcrumb>
         </el-row>
 <!-- 面包屑栏目结束 -->
@@ -35,6 +35,7 @@
   <el-table
       :data="articles"
       style="width: 100%;"
+      :row-style='rowStyle'
       max-height="600">
 <el-table-column type="expand">
       <template slot-scope="props">
@@ -72,7 +73,7 @@
       width="160">
       <template slot-scope="scope">
         <el-button @click="viecollection(scope.row.id)" type="text" size="small">查看文章</el-button>
-        <el-button @click="deletearticle(scope.row.id)" type="text" size="small">删除</el-button>
+        <el-button @click="deletearticle(scope.row.id,scope.row.doc_recycle)" type="text" size="small">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -110,12 +111,21 @@ export default {
         //使用的阅读列表进行的测试
        var _this = this
        //console.log(this.$store.)
-        this.$axios.get('/doc/docread/'+this.$store.state.user.id).then(resp => {
+        this.$axios.get('/doc/founder/'+this.$store.state.user.id).then(resp => {
           if (resp && resp.data.code === 200) {
                 _this.articles=resp.data.result
                
           }
         })
+        },
+        rowStyle({row,rowIndex}){
+          let colorstyle={}
+          if(row.doc_recycle==true){
+            colorstyle.color='red'
+            return colorstyle
+          }else{
+            return ''
+          }
         },
         
         viecollection(id){
@@ -128,8 +138,17 @@ export default {
 
         },
         //删除函数
-        deletearticle(id){
-        this.$confirm('此操作将文章放入回收站, 是否继续?', '提示', {
+        deletearticle(id,recycle){
+          var que=""
+          var mesg=""
+        if(recycle==false){
+          que="此操作将文章放入回收站, 是否继续?"
+          mesg="已移到回收站"
+        }else{
+          que="此操作将文章永久删除, 是否继续?"
+          mesg="已永久删除"
+        }
+        this.$confirm(que, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -140,8 +159,11 @@ export default {
                 // this.loadArticles()
                 this.$message({
                   type: 'info',
-                  message: '已移到回收站'
+                  message: mesg
                 })
+                // if(mesg=="已移到回收站"){
+
+                // }
                 this.loadArticles()  
               }
             })

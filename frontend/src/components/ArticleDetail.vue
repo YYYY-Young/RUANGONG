@@ -81,7 +81,6 @@ import Head from './Head.vue'
     mounted () {
       this.loadArticle()
       //this.loadLikes()
-      console.log(this.article)
     },
     methods: {
       loadArticle () {
@@ -91,7 +90,20 @@ import Head from './Head.vue'
             _this.article = resp.data.result
             //console.log(_this.article)
           }
+          if(resp.data.result==null){
+                this.$message({
+                  type: 'info',
+                  message: '该文章已被删除或者你没有查看权限'
+                })               
+          }
+          console.log(resp.data.result)
         })
+        // if(this.article.id==""){
+        //         this.$message({
+        //           type: 'info',
+        //           message: '该文章已被删除或者你没有查看权限'
+        //         })         
+        // }
        
       },
       // loadLikes(){
@@ -103,9 +115,17 @@ import Head from './Head.vue'
 
       // },
       editorarticle(){
+        // if(this.article.isedit==true){
+        //     <el-alert
+        //       title="该文章正在被修改"
+        //        type="error">
+        //   </el-alert>
+        //   return
+        // }
         if(this.$store.state.user.id!=this.article.doc_founder&&this.article.doc_edit){
           alert("你没有编辑权限！")
         }else{
+          // this.article.isedit==true  通过接口改变
         this.$router.push(
           {
             name: 'ArticleChange',
