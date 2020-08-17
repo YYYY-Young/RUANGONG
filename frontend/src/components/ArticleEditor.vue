@@ -73,7 +73,10 @@
 <!-- 权限弹框     -->
 	<el-dialog
         :visible.sync="permissionVisible"
-        width="30%" id="dia2">
+        width="30%" 
+        id="dia2"
+        :close-on-click-modal="false"
+        :show-close="false">
 		<el-divider content-position="left">文章权限设置</el-divider>
 			<el-row>
 			<el-switch
@@ -124,9 +127,24 @@
 				inactive-text="不回收">
 			</el-switch>
 			</el-row>
-          <el-button type="primary" @click="permissionVisible = false">确 定</el-button>
-	</el-dialog>   
 
+          <el-button type="primary" @click="dialogclose()">确 定</el-button>
+	</el-dialog> 
+  <!-- 团队设置弹框 -->
+ <el-dialog
+        title="请选择文章所属团队id"
+        :visible.sync="teamVisible"
+        width="30%" 
+        id="dia3"
+        :close-on-click-modal="false"
+        :show-close="false">
+      <div v-for="item in teams" :key="item.id" >
+         <el-radio v-model="articleTeam" :label="item.id">{{item.id}}</el-radio>        
+      </div>
+        <div slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="closeteamdialog()">确 定</el-button>
+  </div>
+ </el-dialog>
     </el-row>
 <!--------------------------------------------------------------------------------------------->
       </el-main>
@@ -150,11 +168,14 @@ import Head from './Head.vue'
         articleTitle: "",//默认标题
 		dialogVisible: false, //控制是否显示摘要弹框
 		permissionVisible: false, //控制是否显示权限弹框
-		permissions: [true,true,true,true,true,true,false]
+    permissions: [false,true,true,true,true,true,false],
+    teamVisible:false,
+    articleTeam:"0",
+    teams:[]
       }
     },
     mounted () {
-      
+      this.loadteams()
       if (this.$route.params.article) { 
         this.article = this.$route.params.article
         this.articleTitle=this.article.doc_title
@@ -162,6 +183,14 @@ import Head from './Head.vue'
       }
     },
     methods: {
+      loadteams(){
+        this.$axios.get('/team/findteams/'+this.$store.state.user.id).then(resp =>{
+          if(resp&&resp.data.code==200){
+            this.teams=resp.data.result
+            console.log(this.teams)
+          }
+        })
+      },
         saveArticles (value, render) {
           var _this=this
         // articleTitle没写则无法提交
@@ -188,7 +217,7 @@ import Head from './Head.vue'
              doc_cover: "",
              doc_found_date: date,
              doc_founder: _this.$store.state.user.id,
-             doc_team: "0",
+             doc_team: _this.articleTeam,
              doc_only_team: _this.permissions[0], 
              doc_read: _this.permissions[1],
              doc_edit: _this.permissions[2],
@@ -223,6 +252,24 @@ import Head from './Head.vue'
           })
         })
       },
+      dialogclose(){
+        if(this.permissions[0]==true){
+          this.teamVisible=true
+        }else{
+          this.articleTeam="0"
+          this.permissionVisible = false
+          console.log(this.articleTeam)
+        }
+      },
+      closeteamdialog(){
+        if(this.articleTeam=="0"){
+          alert("请选择文章所属团队！")
+          return
+        }
+        console.log(this.articleTeam)
+        this.teamVisible=false
+        this.permissionVisible=false
+      }
     }
     }
 </script>
