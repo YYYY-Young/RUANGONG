@@ -30,6 +30,13 @@ const routes = [
         component: () =>
             import ('../components/TeamDetail.vue'),
     },
+  
+    {
+        path: "/messagecenter",
+        name: "MessageCenter",
+        component: () =>
+            import ('../components/MessageCenter.vue'),
+    },
 
     {
         path: '/testbench',

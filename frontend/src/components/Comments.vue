@@ -128,6 +128,11 @@ this.loadcomments()
                   message: '已发表评论'
                 })
                 this.loadcomments()
+              }else{
+                this.$message({
+                  type: 'info',
+                  message: '你没有权限'
+                })               
               }
             })
             //console.log(this.articleTitle)            

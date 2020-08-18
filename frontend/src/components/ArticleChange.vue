@@ -173,6 +173,11 @@ import Head from './Head.vue'
     //监听路由变化
     beforeRouteLeave (to,from,next){
       console.log("跳转啦")
+      this.$axios.get('/doc/changeeditstatus/'+this.article.id).then(resp=>{
+            if(resp&&resp.data.code==200){
+              console.log("成功改啦")
+            }
+          })
       //this.article.isedit=false 通过接口改变
       next()
     },

@@ -34,7 +34,7 @@
   <el-dropdown-menu slot="dropdown">
     <el-dropdown-item ><el-button type="text" @click="opendialog()">协作</el-button></el-dropdown-item>
     <el-dropdown-item>设置</el-dropdown-item>
-    <el-dropdown-item>删除</el-dropdown-item>
+    <el-dropdown-item ><el-button type="text" @click="deleteteam()">删除</el-button></el-dropdown-item>
   </el-dropdown-menu>
                 </el-dropdown>
 
@@ -88,11 +88,11 @@
     </el-table-column>
   </el-table>
   <div>
-  <el-button
+  <!-- <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(this.$store.state.user.id)">退出队伍</el-button></div>
-
+          @click="handleDelete(this.$store.state.user.id)">退出队伍</el-button></div> -->
+  </div>
 <el-dialog  top="5vh" center="false" title="成员管理" :visible.sync="dialogFormVisible" width="40%">
   
     <div>
@@ -109,11 +109,12 @@
     </div>
     </div>
   
-    <el-divider></el-divider>
+    
+    <el-divider content-position="center">已加入成员如下</el-divider>
     <el-table
     :data="tableData"
-    height="360"
-    style="width: 100%">
+    max-height="360"
+    style="width: 100%;margin-bottom:0px">
     <el-table-column
       label="Name"
       prop="user.username">
@@ -129,17 +130,40 @@
           size="mini"
           type="danger"
           :disabled="!adderissys"
-          @click="handleDelete(scope.row.id)">Delete</el-button>
+          @click="handleDelete(scope.row.id,scope.row.user.id)">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-divider content-position="center">待加入成员如下</el-divider>
+<el-table
+    :data="notaccept"
+    max-height="360"
+    style="width: 100%;margin-bottom:10px">
+    <el-table-column
+      label="Name"
+      prop="user.username">
+    </el-table-column>
+    <el-table-column
+      label="Phone"
+      prop="user.phone">
+    </el-table-column>
+    <el-table-column
+      align="right">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          type="danger"
+          :disabled="!adderissys"
+          @click="regret(scope.row.id)">撤回</el-button>
       </template>
     </el-table-column>
   </el-table>
 
-
     <!-- </div> -->
   <!-- </el-form> -->
   <div slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+    <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
+    <el-button type="primary" @click="dialogFormVisible = false">关 闭</el-button>
   </div>
 </el-dialog>
 
@@ -171,7 +195,8 @@ export default {
         input:'',
         issys:'false',
         adderissys:'',
-        tid:''
+        tid:'',
+        notaccept:[]
       }
       
   },
@@ -194,6 +219,11 @@ export default {
                 _this.tableData=resp.data.result
                 console.log(_this.tableData)             
         }})
+        this.$axios.get('/team/findusersnotaccepted/'+this.tid).then(resp=>{
+            if(resp&&resp.data.code==200){
+              _this.notaccept=resp.data.result
+            }
+        })
       },
       opendialog(){
         this.loadtableData(),
@@ -211,27 +241,43 @@ export default {
               if (resp && resp.data.code === 200) {
                 this.$message({
                   type: 'info',
-                  message: '添加成功',
+                  message: '发送邀请成功',
                 })
                 this.loadtableData()           
         }})},
-        handleDelete(id){
+        handleDelete(id,uid){
             var _this = this
-       //console.log(this.$store.)
-        this.$axios.delete('/team/deleteuser/'+id).then(resp => {
+       
+       var msg=""
+       if(this.$store.state.user.id==uid){
+         msg="退出成功"
+       }else{
+         msg="删除成功"
+       }
+        this.$axios.delete('/team/deleteuser/'+this.$store.state.user.id+'/'+id).then(resp => {
+          console.log(resp.data.code)
           if (resp && resp.data.code === 200) {
                 this.$message({
                   type: 'info',
-                  message: '删除成功',
+                  message: msg,
                   
                 })
-                 this.loadtableData()
+                if(msg=="退出成功"){
+                  this.$router.push('/workbench')
+                }else{
+                  this.loadtableData()
+                }
+                 //this.loadtableData()
+          }else{
+            this.$message({
+                  type: 'info',
+                  message: '权限不足',
+                  
+                })
           }
-         
-                
-        })
-      
-        console.log(this.tableData)
+                         
+        })     
+        
         },
         loadArticles(){
        var _this = this
@@ -277,6 +323,39 @@ export default {
             message: '已取消删除'
           })
         })
+        },
+        regret(id){
+          //撤回
+        this.$axios.delete('/team/deny/'+id).then(resp=>{
+        if(resp&&resp.data.code==200){
+         this.$message({
+            type: 'info',
+            message: '撤回成功'
+          }) 
+          this.loadtableData()        
+        }else{
+          alert("失败")
+        }
+        
+      })           
+        },
+        deleteteam(){
+          var _this=this
+  this.$axios.delete('/team/delete/'+this.$store.state.user.id+'/'+_this.tid).then(resp=>{
+        if(resp&&resp.data.code==200){
+         this.$message({
+            type: 'info',
+            message: '解散成功'
+          }) 
+          this.$router.push('/workbench')      
+        }else{
+          this.$message({
+            type: 'info',
+            message: '没有足够权限'
+          }) 
+        }
+        
+      })             
         }
     }
 };

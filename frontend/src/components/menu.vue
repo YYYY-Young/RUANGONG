@@ -13,7 +13,7 @@
       </el-menu-item>      -->
 <el-submenu index="1" style="background-color: #F5F5F5">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="el-icon-s-home"></i>
           <span >工作空间</span>
         </template>
         <el-menu-item-group >
@@ -25,7 +25,7 @@
 </el-submenu>
       <el-submenu index="2" style="background-color: #F5F5F5">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="el-icon-user-solid"></i>
           <span >团队空间</span>
         </template>
         <el-menu-item-group >
@@ -39,16 +39,16 @@
         </el-menu-item-group>
 </el-submenu>
       <el-menu-item index="3">
-        <i class="el-icon-document"></i>
-        <span slot="title" @click="gorecyclebin">回收站点  </span>
+        <i class="el-icon-delete-solid"></i>
+        <span slot="title" @click="gorecyclebin()">回收站点  </span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <!-- <el-menu-item index="4">
         <i class="el-icon-setting"></i>
         <span slot="title">帮助中心</span>
-      </el-menu-item>
+      </el-menu-item> -->
       <el-menu-item index="5">
-        <i class="el-icon-setting"></i>
-        <span slot="title">消息中心</span>
+        <i class="el-icon-phone"></i>
+        <span slot="title" @click="gomessagecenter()">消息中心</span>
       </el-menu-item>
  <!-- <el-submenu index="1" style="background-color: #F5F5F5">
         <template slot="title">
@@ -71,6 +71,9 @@ export default {
     },
     gorecyclebin(){
       this.$router.push('/recyclebin')
+    },
+    gomessagecenter(){
+      this.$router.push('/messagecenter')
     },
     gocollections(){
       this.$router.push('/collections')

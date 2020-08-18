@@ -35,7 +35,7 @@
           :direction="direction"
           :before-close="handleClose">
           <div id="un" style="margin:0px;text-align:center;background-color:#EFEFEF">
-        <el-avatar  @click.native="drawer = true" type="primary" :size="50">{{this.$store.state.user.username}}</el-avatar>
+        <el-avatar   type="primary" :size="50">{{this.$store.state.user.username}}</el-avatar>
           </div> 
           <div id="in" style="background-color:#F5F5F5;height:100%;margin:0px">
             <div>
@@ -74,6 +74,7 @@
             </div>
             <div style="height:100px"></div>
             <div style="text-align:right">
+                <el-button style="margin-right:10px;height:40px;width:100px" type="danger" @click="userlogout()">注销</el-button>
                 <el-button style="margin-right:10px;height:40px;width:100px" type="primary" @click="editInfoopen()">修改信息</el-button>
                 <el-button style="margin-right:10px;height:40px;width:100px" type="primary" @click="resetPwopen()">修改密码</el-button>
             </div>
@@ -87,6 +88,7 @@
         width="30%"
         :close-on-click-modal="false"
         :show-close="false">
+<div>
 <el-form :model="infoForm">
     <el-form-item label="用户名称" :label-width="formLabelWidth">
       <el-input v-model="infoForm.username" autocomplete="off"></el-input>
@@ -94,13 +96,23 @@
     <el-form-item label="用户电话" :label-width="formLabelWidth">
       <el-input v-model="infoForm.phone" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="用户邮箱" :label-width="formLabelWidth">
+    <!-- <el-form-item label="用户邮箱" :label-width="formLabelWidth">
       <el-input v-model="infoForm.email" autocomplete="off"></el-input>
-    </el-form-item>
+    </el-form-item> -->
   </el-form>
+  <el-button type="primary" @click="editInfosubmit()" style="margin-bottom:5px">确 定 </el-button>
+</div>
+<div>
+ <el-input style="width:300px;margin-top:10px" v-model="newemail" placeholder="请输入新邮箱" >
+      </el-input>
+   <el-input style="width:300px;margin-top:10px" v-model="emailcode" placeholder="请输入验证码">
+      </el-input>
+<el-button type="primary" @click=" getpwcode()">获取验证码</el-button>
+<el-button type="primary" @click="resetemailsubmit()">确认</el-button>
+</div>
   <div slot="footer" class="dialog-footer">
     <el-button @click="editInfoVisible = false">取 消</el-button>
-    <el-button type="primary" @click="editInfosubmit()">确 定</el-button>
+    <!-- <el-button type="primary" @click="editInfosubmit()">确 定 </el-button> -->
   </div>
         </el-dialog>
         <!-- 个人信息弹框结束 -->
@@ -112,16 +124,20 @@
         :close-on-click-modal="false"
         :show-close="false">
         <el-form :model="pwForm">
-            <el-form-item label="原密码" :label-width="formLabelWidth">
+            <!-- <el-form-item label="原密码" :label-width="formLabelWidth">
               <el-input v-model="pwForm.oldpw" autocomplete="off"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="新密码" :label-width="formLabelWidth">
               <el-input v-model="pwForm.newpw" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="验证码" :label-width="formLabelWidth">
+              <el-input v-model="pwForm.code" autocomplete="off"></el-input>
             </el-form-item>
        </el-form>
       <div slot="footer" class="dialog-footer">
             <el-button @click=" resetPwVisible = false">取 消</el-button>
-            <el-button type="primary" @click=" resetPwsubmit()">确 定</el-button>
+            <el-button type="primary" @click=" getpwcode()">获取验证码</el-button>
+            <el-button type="primary" @click="resetPwsubmit()">确认</el-button>
       </div>
         </el-dialog>
         <!-- 修改密码弹框结束 -->
@@ -133,15 +149,31 @@
         :close-on-click-modal="false"
         :show-close="false"
         >
-        <el-table :data="search_users" max-height="400px">
+       <!-- <div style="margin:0px;text-align:center;background-color:#EFEFEF">
+        <el-avatar   type="primary" :size="50">{{search_users[0].username}}</el-avatar>
+        </div>
+        
+        <div  class="info1">
+        <h1>  用户ID：{{search_users[0].id}}</h1>
+        </div>
+        <div  class="info2">
+        <h1>  名称：{{search_users[0].username}}</h1>
+        </div>
+        <div  class="info1">
+         <h1> 邮箱：{{search_users[0].email}}</h1>
+        </div>
+        <div  class="info2">
+          <h1>电话：{{search_users[0].phone}}</h1>
+        </div>  -->
+         <el-table :data="search_users" max-height="400px">
           <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
            <el-table-column prop="username" label="名称" width="150"></el-table-column>
            <el-table-column prop="email" label="邮箱" width="150"></el-table-column>
            <el-table-column prop="phone" label="电话" width="150"></el-table-column>
-          </el-table>
+          </el-table>  
           <div slot="footer" class="dialog-footer">
             <el-button @click=" search_users_visible = false">确 定</el-button>
-           </div>
+          </div>
         </el-dialog>
         <!-- 搜索用户显示结束 -->
         <!-- 搜索文章显示 -->
@@ -216,9 +248,11 @@ export default {
             phone:"",
             email:""
           },
+          newemail:"",
+          emailcode:"",
           pwForm:{
-            oldpw:"",
-            newpw:""
+            newpw:"",
+            code:""
           },
           options: [{
             label:"用户名",
@@ -299,9 +333,92 @@ export default {
       //设置pwForm值
       this.resetPwVisible=true
     },
+    getpwcode(){
+//获取修改的验证码
+this.$axios.get('/sendemail/'+this.$store.state.user.email).then(resp =>{
+  if(resp&&resp.data.code==200){
+          this.$message({
+            type: 'info',
+            message: '请在邮箱中查看验证码'
+          })    
+  }
+})
+    },
     resetPwsubmit(){
-      //提交修改信息
+      var user={}
+      this.$axios.put('/user/password',{
+        username:this.$store.state.user.username,
+        email:this.$store.state.user.email,
+        code:this.pwForm.code,
+        password:this.pwForm.newpw
+      }).then(resp=>{
+if(resp&&resp.data.code==200){
+  user=resp.data.result
+  if(user.password==this.$store.state.user.password){
+          this.$message({
+            type: 'info',
+            message: '验证码不正确或者新密码与旧密码一致'
+          })    
+  }else{
+    this.$store.commit('login', user)
+              this.$message({
+            type: 'info',
+            message: '修改成功请重新登录'
+          })  
+    this.$store.commit('logout')
+    this.$router.push('/login')
+  }
+}
+      })
       this.resetPwVisible=false
+    },
+    resetemailsubmit(){
+      var user={}
+        this.$confirm('是否确认新邮箱为可用邮箱', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            if(this.newemail==""){
+				alert("邮箱不能为空！")
+				return
+        }     
+        //如果没有输入标题将以默认标题提交
+              // console.log(this.emailcode)
+              // console.log(this.newemail)
+            this.$axios.put('/user/emailchange', {
+                username:this.$store.state.user.username,
+                email:this.newemail,
+                code:this.emailcode
+            }           
+              ).then(resp => {
+              if (resp && resp.data.code === 200) {
+                user=resp.data.result
+                if(user.email==this.$store.state.user.email){
+                this.$message({
+                  type: 'info',
+                  message: '验证码错误或者新旧邮箱一致'
+                })                  
+                }else{
+                this.$message({
+                  type: 'info',
+                  message: '已修改成功'
+                })   
+                  this.$store.commit('login', user) 
+                  this. loaduser()
+                    this.editInfoVisible=false  
+                }
+
+
+              }
+            })
+          }
+        ).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          })
+        })
     },
     querySearch(queryString, cb){
       //搜索历史
@@ -360,6 +477,27 @@ export default {
         }
       })
       
+    },
+    userlogout(){
+        this.$confirm('是否确认注销登录', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {  
+                        this.$message({
+            type: 'info',
+            message: '成功注销'
+          })  
+    this.$store.commit('logout')
+    this.$router.push('/login')  
+          }
+        ).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+
     }
   },
 }
@@ -385,12 +523,23 @@ export default {
 }
 .drawer_info {
   margin-left:20px;
-  color:#70DB93;
+  color:#a6cfeb;
   font-size:20px
 }
 .drawer_row{
   height: 100px;
   margin-left:10px
 }
-
+.info1{
+  height: 100px;
+  width: 100%;
+  text-align: center;
+  background-color: #e0e0e0;
+}
+.info2{
+  height: 100px;
+  width: 100%;
+  text-align: center;
+  background-color: #cecaca;
+}
 </style>

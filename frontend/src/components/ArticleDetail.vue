@@ -37,10 +37,11 @@
 <!-- 下面开始写要渲染的东西 -->
  <div class="articles-area">
   <el-row style="text-align:left;margin-top:10px">
-		<el-button style="background-color: #F5F5F5;margin-left:10px;height:30px;width:100px"   @click="editorarticle()">编辑文章</el-button>
-		<el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="deleteArticle (article.id)">删除文章</el-button>
-    <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" @click="viewcomments()" >查看/发表评论</el-button>
-    <el-button style="background-color: #F5F5F5;margin-right:10px;height:30px;width:100px" icon="el-icon-star-off" @click="likeAnddislike()" >收藏</el-button>
+		<el-button style="background-color: #F5F5F5;margin-left:10px;margin-right:5px;height:30px;width:100px"   icon="el-icon-edit" @click="editorarticle()">编辑文章</el-button>
+		<el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-delete" @click="deleteArticle (article.id)">删除文章</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-eleme" @click="viewcomments()" >评论</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-star-off" @click="likeAnddislike()" >收藏</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-share" @click="shareVisible=true" >分享</el-button>
 	</el-row>
     <el-card style="text-align: left;width: 990px;margin: 10px auto 0 auto;min-height:500px; ">
       <div>   
@@ -55,6 +56,19 @@
          <el-button type="danger" @click="deleteArticle (article.id)">删除文章</el-button>     -->
       </div> -
     </el-card>
+    <!-- 输入分享给谁的弹框 -->
+    <el-dialog
+        title="请输入分享对象id，请确保其id正确"
+        :visible.sync="shareVisible"
+        width="30%"
+        :close-on-click-modal="false"
+        :show-close="false">
+        <el-input  v-model="shareto" placeholder="请输入id"></el-input>
+      <div slot="footer" class="dialog-footer">
+            <el-button @click=" shareVisible = false" style="width:60px;height:30px">取 消</el-button>
+            <el-button type="primary" @click="sharearticle()"  style="width:60px;height:30px">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
       </el-main>
 <!-- 主要渲染栏容器结束 -->
@@ -75,6 +89,9 @@ import Head from './Head.vue'
     data () {
       return {
         article: {},
+        isedit:"0",
+        shareto:"",
+        shareVisible:false
         //likes:""
       }
     },
@@ -115,17 +132,37 @@ import Head from './Head.vue'
 
       // },
       editorarticle(){
-        // if(this.article.isedit==true){
-        //     <el-alert
-        //       title="该文章正在被修改"
-        //        type="error">
-        //   </el-alert>
-        //   return
-        // }
-        if(this.$store.state.user.id!=this.article.doc_founder&&this.article.doc_edit){
+        var _this=this
+        this.$axios.get('/doc/ifedit/'+this.article.id).then(resp =>{
+          // console.log("判断")
+          // console.log(resp.data.code)
+          if(resp.data.code==200){
+           // console.log(_this.isedit)
+            _this.isedit="0"
+            console.log("进入了200的if")
+           // console.log(_this.isedit)
+          }
+          if(resp.data.code==400){
+            _this.isedit="1"
+            console.log("进入了400的if")                        
+          }
+          //-----------------
+          console.log(_this.isedit)
+         if(_this.isedit =="1"){
+           console.log("进了if")
+           console.log(_this.isedit)
+              alert("该文章正在被修改！")
+           return
+         }
+        if(this.$store.state.user.id!=this.article.doc_founder&&this.article.doc_edit==false){
           alert("你没有编辑权限！")
         }else{
           // this.article.isedit==true  通过接口改变
+          this.$axios.get('/doc/changeeditstatus/'+this.article.id).then(resp=>{
+            if(resp&&resp.data.code==200){
+              console.log("成功改啦")
+            }
+          })
         this.$router.push(
           {
             name: 'ArticleChange',
@@ -136,6 +173,10 @@ import Head from './Head.vue'
         )
         }
 
+        }
+        )
+        //_this.isedit="3"
+         
      },
       deleteArticle (id) {
         this.$confirm('此操作将文章放入回收站, 是否继续?', '提示', {
@@ -199,8 +240,37 @@ import Head from './Head.vue'
             }
           }
         )
-      }
+      },
+      sharearticle(){
+        //分享文章
 
+        if(this.shareto==""){
+          alert("不能为空！")
+          return
+        }
+        this.$axios.post('/doc/editrecord',{
+          uid:this.shareto,
+          docid:this.article.id,
+          doc_share:true,
+          doc_share_uid:this.$store.state.user.id,
+          doc_open_des:"快来看"          
+        }).then(resp=>{
+          if(resp&&resp.data.code==200){
+          this.$message({
+            type: 'info',
+            message: '分享成功'
+          })
+          }else{
+          this.$message({
+            type: 'info',
+            message: '分享失败(id不存在或者你没有足够权限'
+          })
+          }
+  
+          this.shareVisible=false
+        })
+        
+      }
     }
   }
 </script>
