@@ -54,7 +54,11 @@
     <div style="height:auto">
       <el-row>
 <!-- 之后这个名字是通过方法里的一个函数由ID获取名字 -->
-        <el-col :span="12" style="text-align:left">{{item.uid}}:</el-col>
+        <el-col :span="12" style="text-align:left">
+          <el-link type="primary" @click="viewuser(item.user)">
+          {{item.user.username}}:
+          </el-link>
+          </el-col>
       </el-row>
       <div style="width:95%;margin-left:25px;height:auto">
           <p style="text-align:left">{{item.des}}</p>
@@ -64,6 +68,23 @@
   </div>
   </el-card>
 </div>
+<el-dialog
+        title="用户信息"
+        :visible.sync="userVisible"
+        width="50%"
+        :close-on-click-modal="false"
+        :show-close="false"
+        >
+         <el-table :data="user" max-height="400px">
+          <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
+           <el-table-column prop="username" label="名称" width="150"></el-table-column>
+           <el-table-column prop="email" label="邮箱" width="150"></el-table-column>
+           <el-table-column prop="phone" label="电话" width="150"></el-table-column>
+          </el-table>  
+          <div slot="footer" class="dialog-footer">
+            <el-button @click=" userVisible = false">确 定</el-button>
+          </div>
+        </el-dialog>
       </el-main>
 
 <!-- 主要渲染栏容器结束 -->
@@ -88,7 +109,9 @@ export default {
         // {name:"2",time:"2020-01-23",des:"d23"},
         // {name:"3",time:"2020-01-23",des:"d4"},
       ],
-      text:""
+      text:"",
+      userVisible:false,
+      user:[]
     }
   },
   mounted() {
@@ -148,8 +171,9 @@ this.loadcomments()
         })
     },
     //通过用户uid返回用户名字
-    getNameById(id){
-
+    viewuser(user){
+      this.user[0]=user
+      this.userVisible=true
     }
   }
 };

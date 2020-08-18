@@ -92,6 +92,9 @@
 <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
+           <el-form-item label="评论人ID">
+            <span>{{ props.row.uid }}</span>
+          </el-form-item>
           <el-form-item label="评论内容">
             <span>{{ props.row.des }}</span>
           </el-form-item>
@@ -99,8 +102,8 @@
       </template>
     </el-table-column> 
     <el-table-column
-        prop="uid"
-        label="评论人id"
+        prop="user.username"
+        label="评论人名称"
         width="250">
     </el-table-column>
     <el-table-column

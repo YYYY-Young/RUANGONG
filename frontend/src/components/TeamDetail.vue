@@ -33,7 +33,7 @@
   </span>
   <el-dropdown-menu slot="dropdown">
     <el-dropdown-item ><el-button type="text" @click="opendialog()">协作</el-button></el-dropdown-item>
-    <el-dropdown-item>设置</el-dropdown-item>
+    <el-dropdown-item><el-button type="text" @click="editteam()">修改资料</el-button></el-dropdown-item>
     <el-dropdown-item ><el-button type="text" @click="deleteteam()">删除</el-button></el-dropdown-item>
   </el-dropdown-menu>
                 </el-dropdown>
@@ -166,7 +166,34 @@
     <el-button type="primary" @click="dialogFormVisible = false">关 闭</el-button>
   </div>
 </el-dialog>
-
+ <el-dialog
+        title="修改团队信息"
+        :visible.sync="editteamVisible"
+        width="50%"
+        :close-on-click-modal="false"
+        :show-close="false"
+        >
+        <div class="demo-input-suffix">
+          修改团队名称：
+          <el-input
+    placeholder="请输入内容"
+    v-model="edit_teamname">
+  </el-input>
+        </div>
+        <div class="demo-input-suffix">
+          修改团队简介：
+         <el-input
+  type="textarea"
+  :autosize="{ minRows: 2, maxRows: 6}"
+  placeholder="请输入内容"
+  v-model="edit_des">
+</el-input>
+        </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click=" editteamVisible=false">取消</el-button>
+            <el-button type="primary" @click="editsubmit()">确定</el-button>
+          </div>
+        </el-dialog>
 
 </el-main>
 <!-- 主要渲染栏容器结束 -->
@@ -190,13 +217,18 @@ export default {
           tableData: [],
         teamname:'',
         search: '',
+        des:'',
+        fid:'',
+        edit_teamname:'',
+        edit_des:'',
         dialogFormVisible: false,
         formLabelWidth: '120px',
         input:'',
         issys:'false',
         adderissys:'',
         tid:'',
-        notaccept:[]
+        notaccept:[],
+        editteamVisible:false
       }
       
   },
@@ -204,6 +236,8 @@ export default {
       this.teamname=this.$route.query.teamname,
       this.tid=this.$route.query.tid,
       this.adderissys=this.$route.query.issys,
+      this.des=this.$route.query.des,
+      this.fid=this.$route.query.fid,
       this.loadArticles(),
       this.loadtableData()
       
@@ -356,6 +390,40 @@ export default {
         }
         
       })             
+        },
+        editteam(){
+          this.edit_teamname=this.teamname
+          this.edit_des=this.des
+          this.editteamVisible=true
+
+        },
+        editsubmit(){
+          var _this=this
+          if(_this.fid!=this.$store.state.user.id){
+              this.$message({
+               type: 'info',
+               message: '不是创建者无法修改'
+          })   
+            this.editteamVisible=false
+            return
+          }
+          this.$axios.post('/team/editTeammsg',{
+            id:_this.tid,
+            teamname:_this.edit_teamname,
+            des:_this.edit_des
+          }).then(resp=>{
+            if(resp&&resp.data.code==200){
+               this.$message({
+               type: 'info',
+               message: '修改成功！'
+          })   
+          this.editteamVisible=false
+          this.$router.push('/myteam')
+            }else{
+              alert("失败")
+            }
+          })
+
         }
     }
 };

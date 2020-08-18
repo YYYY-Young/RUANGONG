@@ -43,7 +43,7 @@
           <el-form-item label="团队简介">
             <span>{{ props.row.team.des}}</span>
           </el-form-item>
-           <el-form-item label="团队创建人ID">
+           <el-form-item label="创建人ID">
             <span>{{ props.row.team.leaderid}}</span>
           </el-form-item>
         </el-form>
@@ -117,8 +117,9 @@ export default {
                 query:{
                     tid:userteam.team.id,
                     teamname: userteam.team.teamname,
-                    issys: userteam.issys
-                    
+                    issys: userteam.issys,
+                    des: userteam.team.des,
+                    fid:userteam.team.leaderid
                 }
             })
 
