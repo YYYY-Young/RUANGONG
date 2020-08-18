@@ -254,7 +254,14 @@ import Head from './Head.vue'
       },
       dialogclose(){
         if(this.permissions[0]==true){
-          this.teamVisible=true
+          if(this.teams.length!=0){
+            this.teamVisible=true
+          }else{
+            this.articleTeam="0"
+            this.permissions[0]=false
+            this.permissionVisible=false
+          }
+          
         }else{
           this.articleTeam="0"
           this.permissionVisible = false

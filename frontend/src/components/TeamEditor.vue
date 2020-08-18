@@ -1,7 +1,9 @@
 <!--该组件为编辑器组件-->
 <template>
  <el-container>
-   <el-header height="50px"></el-header>
+   <el-header height="50px">
+     <Head />
+   </el-header>
     
 <el-container>   
     <el-aside width="170px">
@@ -61,10 +63,12 @@
 
 <script>
 import Menu from './menu.vue'
+import Head from './Head.vue'
   export default {
 	name: 'Editor',
 	components: {
-		Menu
+    Menu,
+    Head
 	},
     data () {
       return {
