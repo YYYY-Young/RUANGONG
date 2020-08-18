@@ -167,7 +167,7 @@ import Head from './Head.vue'
         this.permissions[0]=this.article.doc_recycle
 
       }
-      
+ console.log(this.article)     
     
     },
     //监听路由变化

@@ -34,14 +34,14 @@
         按下Ctrl+S或者点击工具栏保存按钮保存文章    
     </el-row> 
 	<el-row style="text-align:left">
-		<el-button style="background-color: #F5F5F5;margin-left:10px"  @click="dialogVisible = true">输入摘要</el-button>
-		<el-button style="background-color: #F5F5F5;margin-right:10px" @click="permissionVisible= true">设置文章权限</el-button>
-    
+		<el-button icon="el-icon-edit" style="background-color: #F5F5F5;margin-left:10px;margin-right:5px;margin-bottom:5px"  @click="dialogVisible = true">输入摘要</el-button>
+		<el-button icon="el-icon-setting" style="background-color: #F5F5F5;margin-right:5px" @click="permissionVisible= true">设置文章权限</el-button>
+    <el-button icon="el-icon-s-order" style="background-color: #F5F5F5;margin-right:5px" @click="modelVisible=true">使用模板创建</el-button>    
 	</el-row>
     <el-row>
         <!--编辑文本内容,待修改-->
         <mavon-editor
-        v-model="article.doc_content_md" 
+        v-model="articlecontent" 
         style="min-height: 500px;"
         ref=md
         @save="saveArticles"
@@ -57,7 +57,10 @@
 <!-- 摘要弹框 -->
       <el-dialog
         :visible.sync="dialogVisible"
-        width="30%" id="dia1">
+        width="30%" 
+        id="dia1"
+        :close-on-click-modal="false"
+        :show-close="false">
         <el-divider content-position="left">摘要</el-divider>
         <el-input
           type="textarea"
@@ -66,7 +69,6 @@
           maxlength="255"
           show-word-limit></el-input>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
         </span>
       </el-dialog> 
@@ -145,6 +147,21 @@
     <el-button type="primary" @click="closeteamdialog()">确 定</el-button>
   </div>
  </el-dialog>
+ <!-- 模板设置弹框 -->
+<el-dialog
+        title="请选择模板"
+        :visible.sync="modelVisible"
+        width="30%" 
+        id="dia4"
+        :close-on-click-modal="false"
+        :show-close="false">
+  <el-radio v-model="modelchoose" label="0">取消</el-radio>
+  <el-radio v-model="modelchoose" label="1">个人信息模板</el-radio>
+  <el-radio v-model="modelchoose" label="2">团队模板</el-radio>
+  <div slot="footer" class="dialog-footer">
+    <el-button type="primary" @click=" closemodeldialog()">确 定</el-button>
+  </div>
+</el-dialog>
     </el-row>
 <!--------------------------------------------------------------------------------------------->
       </el-main>
@@ -155,6 +172,8 @@
 <script>
 import Menu from './menu.vue'
 import Head from './Head.vue'
+import {Modle1} from '../mdmodel/md.js'
+import {Modle2} from '../mdmodel/md.js'
   export default {
 	name: 'Editor',
 	components: {
@@ -163,6 +182,7 @@ import Head from './Head.vue'
 	},
     data () {
       return {
+        articlecontent:"",
         articleAbstract: "default abstract",
         article: {} ,
         articleTitle: "",//默认标题
@@ -171,7 +191,9 @@ import Head from './Head.vue'
     permissions: [false,true,true,true,true,true,false],
     teamVisible:false,
     articleTeam:"0",
-    teams:[]
+    teams:[],
+    modelVisible:false,
+    modelchoose:"0"
       }
     },
     mounted () {
@@ -180,6 +202,7 @@ import Head from './Head.vue'
         this.article = this.$route.params.article
         this.articleTitle=this.article.doc_title
         this.articleAbstract=this.article.doc_abstract
+        this.articlecontent=this.article.doc_content_md
       }
     },
     methods: {
@@ -208,7 +231,7 @@ import Head from './Head.vue'
         }     
         //如果没有输入标题将以默认标题提交
            var date=new Date()
-
+            console.log(value)
             this.$axios.post('/doc/save', {
              doc_title: _this.articleTitle,
              doc_content_html: render,
@@ -229,6 +252,7 @@ import Head from './Head.vue'
              doc_last_edit_time: date
 
             }
+            
               ).then(resp => {
               if (resp && resp.data.code === 200) {
                 this.$message({
@@ -276,6 +300,22 @@ import Head from './Head.vue'
         console.log(this.articleTeam)
         this.teamVisible=false
         this.permissionVisible=false
+      },
+      closemodeldialog(){
+        if(this.modelchoose=="1"){
+          this.articlecontent=Modle1
+          this.modelVisible=false
+          return
+        }
+        if(this.modelchoose=="2"){
+          this.articlecontent=Modle2
+          this.modelVisible=false
+          return          
+        }
+        if(this.modelchoose=="0"){
+          this.modelVisible=false
+          return
+        }
       }
     }
     }
