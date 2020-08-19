@@ -17,9 +17,9 @@
           <span >工作空间</span>
         </template>
         <el-menu-item-group >
-          <el-menu-item index="1-1" @click="returnbench()">工作台</el-menu-item>
-          <el-menu-item index="1-2" @click="gocollections()">我的收藏</el-menu-item>
-          <el-menu-item index="1-3" @click="gomycreate()">我的文章</el-menu-item>
+          <el-menu-item index="1-1" @click="returnbench()" ><i class="el-icon-s-platform"></i>工作台</el-menu-item>
+          <el-menu-item index="1-2" @click="gocollections()"><i class="el-icon-star-on"></i>我的收藏</el-menu-item>
+          <el-menu-item index="1-3" @click="gomycreate()"><i class="el-icon-document"></i>我的文章</el-menu-item>
       
         </el-menu-item-group>
 </el-submenu>
@@ -30,9 +30,11 @@
         </template>
         <el-menu-item-group >
          <el-menu-item index="2-2" @click="createteam()">
+           <i class="el-icon-circle-plus-outline"></i>
           <span>创建团队</span>
          </el-menu-item>
           <el-menu-item index="2-1" @click="myteam()"> 
+            <i class="el-icon-s-cooperation"></i>
           <span> 我的团队</span>   
           </el-menu-item>
         

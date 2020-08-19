@@ -1,8 +1,13 @@
 <template>
-  <div class="register_container">
+<div class="login_con">
+      <div>
+    <img src="../assets/images/diamond.png" class="imgclss">
+  </div> 
+  <div >
     <div class="register_box">
-    <div class='we'>欢迎注册钻石文档</div>
-   
+     
+  
+  
       <!-- 注册表单区域 -->
       <el-form ref="registerFormRef" :model="registerForm" :rules="registerFormRules" label-width="0px" class="register_form">
         <!-- 用户名 -->
@@ -40,6 +45,7 @@
       </el-form>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -82,7 +88,14 @@ export default {
   methods: {
     // 点击重置按钮，重置注册表单
     checkemail(){
- alert('check')
+  this.$axios.get('/sendemail/'+ this.registerForm.email).then(resp =>{
+  if(resp&&resp.data.code==200){
+          this.$message({
+            type: 'info',
+            message: '请在邮箱中查看验证码'
+          })    
+  }
+})
     },
     resetregisterForm() {
       // console.log(this);
@@ -110,13 +123,19 @@ export default {
               this.$message.success('注册成功，请登录')
               this.$router.push('/login')
             } else {
-              this.$alert(resp.data.message, '邮箱验证码错误', {
-                confirmButtonText: '确定'
-              })
+              // this.$alert(resp.data.message, '邮箱验证码错误', {
+              //   confirmButtonText: '确定'
+              // })
             }
           }
           )
-          .catch(failResponse => {})
+           .catch(failResponse => {
+          this.$message({
+            type: 'info',
+            message: '验证码错误或者用户名重复，请重新获取验证码'
+          }) 
+
+           })
       })
     }
   }
@@ -124,14 +143,31 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.register_container {
-  background-color: #2b4b6b;
+.login_con{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
   height: 100%;
-  background-image: url('');
+  min-width: 800px;
+  z-index: -10;
+  zoom: 1;
+  background: url(../assets/images/bg4.jpg) no-repeat;
+  background-size: cover;
+  -webkit-background-size:cover;
+  -o-background-size:cover;
+  background-position: center 0;
 }
 .we {
   text-align: center;
   font-size: 40;
+}
+.imgclss{
+  height: 87px;
+  width:283px;
+  position: absolute;
+  left:39%;
+  top:0%;
 }
 .check {
   float: right;
@@ -139,7 +175,7 @@ export default {
 .register_box {
   width: 450px;
   height: 500px;
-  background-color: rgb(207, 207, 200);
+  background-color: rgba(252, 249, 249,0.3);
   border-radius: 3px;
   position: absolute;
   left: 50%;

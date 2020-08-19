@@ -44,6 +44,8 @@
         v-model="articlecontent" 
         style="min-height: 500px;"
         ref=md
+        @imgAdd="$imgAdd"
+        @imgDel="handleEditorImgDel"
         @save="saveArticles"
         fontSize="16px">
         <!--使用的是编辑器给的四个插件槽中名为left-left-toolbar-afterd那一个-->
@@ -174,6 +176,9 @@ import Menu from './menu.vue'
 import Head from './Head.vue'
 import {Modle1} from '../mdmodel/md.js'
 import {Modle2} from '../mdmodel/md.js'
+import qs from 'qs'
+//import axios2 from 'axios'
+
   export default {
 	name: 'Editor',
 	components: {
@@ -218,7 +223,7 @@ import {Modle2} from '../mdmodel/md.js'
           var _this=this
         // articleTitle没写则无法提交
         //响应还未加
-        console.log(value)
+        console.log(render)
         
         this.$confirm('是否保存并发布文章?', '提示', {
           confirmButtonText: '确定',
@@ -316,7 +321,48 @@ import {Modle2} from '../mdmodel/md.js'
           this.modelVisible=false
           return
         }
-      }
+      },
+      //下面是图片上传的函数
+            $imgAdd(pos, $file){
+            // 第一步.将图片上传到服务器.
+        //     console.log($file)
+        //    var formdate = new FormData();
+        //    formdate.append('smfile', $file);
+        //    this.$axios({
+        //      url:'https://sm.ms/api/upload',
+        //      method:'post',
+        //      data:formdate,
+        //      cache: false,
+        // contentType: false,
+        // processData: false
+        //    // headers: { 'Content-Type': 'multipart/form-data' },
+        //    }).then(resp=>{
+        //      //console.log("jll")
+        //      console.log(resp.data)
+        //       if(resp){
+        //         this.$refs.md.$img2Url(pos, resp.data.imgurl);
+        //       }
+        //    })
+          // this.$axios.post("https://sm.ms/api/upload",qs.stringify({
+          //   url:formdate
+          // })).then(resp=>{
+          //   // console.log("jll")
+          //    console.log(resp.data)
+          //      if(resp){
+          //        this.$refs.md.$img2Url(pos,resp.data.imgurl);
+          //      }
+          //  })
+          //  axios({
+          //      url: 'server url',
+          //      method: 'post',
+          //      data: formdata,
+          //      headers: { 'Content-Type': 'multipart/form-data' },
+          //  }).then((url) => {
+          //      // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+          //      // $vm.$img2Url 详情见本页末尾
+          //      $vm.$img2Url(pos, url);
+          //  })
+        }      
     }
     }
 </script>

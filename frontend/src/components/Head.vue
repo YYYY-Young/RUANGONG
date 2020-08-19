@@ -1,7 +1,7 @@
 <template>
   <div style="height:50px;"><el-row>
     <el-col :span="5">
-       <img src="../assets/images/diamondlogo.jpg" style="height:50px;width:200px;"> 
+       <img src="../assets/images/logoend.jpg" style="height:50px;width:160px;"> 
     </el-col>
     <el-col :span="18" style="text-align:right">
       <el-select v-model="search_method" placeholder="搜索方式" style="width:105px;margin-right:10px;margin-top:5px">
@@ -26,7 +26,7 @@
        <!-- <el-button type="primary" icon="el-icon-search" style="margin:5px" @click="search(search_method,search_content)">搜索</el-button>       -->
     </el-col>
     <el-col :span="1">
-      <el-avatar  @click.native="drawer = true" type="primary" style="margin: 5px;">{{this.$store.state.user.username}}</el-avatar>
+      <el-avatar  @click.native="drawer = true" type="primary" style="margin: 5px;" icon="el-icon-user-solid"></el-avatar>
       </el-col>
       <el-drawer
           title="information"
@@ -35,7 +35,7 @@
           :direction="direction"
           :before-close="handleClose">
           <div id="un" style="margin:0px;text-align:center;background-color:#EFEFEF">
-        <el-avatar   type="primary" :size="50">{{this.$store.state.user.username}}</el-avatar>
+        <el-avatar   type="primary" :size="50" icon="el-icon-user-solid"></el-avatar>
           </div> 
           <div id="in" style="background-color:#F5F5F5;height:100%;margin:0px">
             <div>
@@ -357,7 +357,7 @@ if(resp&&resp.data.code==200){
   if(user.password==this.$store.state.user.password){
           this.$message({
             type: 'info',
-            message: '验证码不正确或者新密码与旧密码一致'
+            message: '验证码不正确或者新密码与旧密码一致，请重新获取验证码'
           })    
   }else{
     this.$store.commit('login', user)
@@ -397,7 +397,7 @@ if(resp&&resp.data.code==200){
                 if(user.email==this.$store.state.user.email){
                 this.$message({
                   type: 'info',
-                  message: '验证码错误或者新旧邮箱一致'
+                  message: '验证码错误或者新旧邮箱一致，请重新获取验证码'
                 })                  
                 }else{
                 this.$message({

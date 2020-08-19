@@ -22,19 +22,19 @@
         </el-row>
        <el-row :gutter="20">
            <el-col :span="5">
-               <img src="../assets/images/design.png" class="image-1"  @click="createarticle()">
+               <img src="../assets/images/design3.png" class="image-1"  @click="createarticle()">
                <span>创建文档</span>
            </el-col>
            <el-col :span="5">              
-               <img src="../assets/images/design.png" class="image-1" @click="recentreview()"> 
+               <img src="../assets/images/design3.png" class="image-1" @click="recentreview()"> 
                <span>最近评论</span>              
            </el-col> 
            <el-col :span="5">               
-               <img src="../assets/images/design.png" class="image-1" @click="recenteditor()">      
+               <img src="../assets/images/design3.png" class="image-1" @click="recenteditor()">      
                <span>最近编辑</span>         
            </el-col>
            <el-col :span="5">               
-               <img src="../assets/images/more-design.png" class="image-1" @click="morearticle()">    
+               <img src="../assets/images/design3.png" class="image-1" @click="morearticle()">    
                <span>最近浏览</span>           
            </el-col>                 
        </el-row>

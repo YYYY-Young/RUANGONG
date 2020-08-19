@@ -1,5 +1,12 @@
 <template>
-  <div class="login_container">
+  <div class="login_con">
+  <div>
+    <img src="../assets/images/diamond.png" class="imgclss">
+  </div>
+<div>
+    <img src="../assets/images/abs.png" class="imgclss2">
+  </div>
+
     <div class="login_box">
     
       <!-- 头像区域
@@ -36,10 +43,11 @@
 export default {
   data() {
     return {
+
       // 这是登录表单的数据绑定对象
       loginForm: {
-        username: 'admin',
-        password: '123456'
+        username: '',
+        password: ''
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -108,21 +116,45 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login_container {
-  background-color: #2b4b6b;
+.login_con{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
   height: 100%;
-}
+  min-width: 800px;
+  z-index: -10;
+  zoom: 1;
+  background: url(../assets/images/bg4.jpg) no-repeat;
+  background-size: cover;
+  -webkit-background-size:cover;
+  -o-background-size:cover;
+  background-position: center 0;
 
+}
+.imgclss{
+  height: 87px;
+  width:283px;
+  position: absolute;
+  left:38%;
+  top:10%;
+}
+.imgclss2{
+  height: 700px;
+  width:164px;
+  position: absolute;
+  right:7%
+}
 .login_box {
   width: 450px;
-  height: 300px;
-  background-color: rgb(207, 207, 200);
+  height: 240px;
+  background-color: rgba(252, 249, 249,0.3);
   border-radius: 3px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 40%;
   transform: translate(-50%, -50%);
-
+  text-align: center;
   .avatar_box {
     height: 130px;
     width: 130px;

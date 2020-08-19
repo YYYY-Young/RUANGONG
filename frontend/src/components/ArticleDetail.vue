@@ -40,7 +40,7 @@
 		<el-button style="background-color: #F5F5F5;margin-left:10px;margin-right:5px;height:30px;width:100px"   icon="el-icon-edit" @click="editorarticle()">编辑文章</el-button>
 		<el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-delete" @click="deleteArticle (article.id)">删除文章</el-button>
     <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-eleme" @click="viewcomments()" >评论</el-button>
-    <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-star-off" @click="likeAnddislike()" >收藏</el-button>
+    <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" :icon="likeicon" @click="likeAnddislike()" >收藏</el-button>
     <el-button style="background-color: #F5F5F5;margin-right:5px;height:30px;width:100px" icon="el-icon-share" @click="shareVisible=true" >分享</el-button>
 	</el-row>
     <el-card style="text-align: left;width: 990px;margin: 10px auto 0 auto;min-height:500px; ">
@@ -91,7 +91,8 @@ import Head from './Head.vue'
         article: {},
         isedit:"0",
         shareto:"",
-        shareVisible:false
+        shareVisible:false,
+        likeicon:"el-icon-star-off"
         //likes:""
       }
     },
@@ -219,6 +220,7 @@ import Head from './Head.vue'
                   type: 'info',
                   message: '收藏成功'
                 })
+                  //this.likeicon="el-icon-star-on"
                   this.loadArticle()
                   this.loadLikes()
 

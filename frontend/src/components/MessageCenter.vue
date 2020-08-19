@@ -265,6 +265,11 @@ this.$axios.get('/team/findthrown/'+this.$store.state.user.id).then(resp=>{
   }else{
     alert("error!")
   }
+  for(var i=0;i<_this.teamremove.length;i++){
+    if(_this.teamremove[i].team==null){
+      _this.teamremove[i].team={"teamname":"该团队已解散"}
+    }
+  }
 })   
 
     },
